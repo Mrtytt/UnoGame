@@ -27,14 +27,9 @@ const SupportScreen: React.FC = () => {
         <Typography sx={styles.contactInfo}>E-posta: support@uno.com</Typography>
         <Typography sx={styles.contactInfo}>Telefon: +90 555 123 45 67</Typography>
       </Box>
-      <Box sx={styles.section}>
-        <Typography variant="h6" sx={styles.subHeader}>
-          Sorun Bildir
-        </Typography>
-        <Button sx={styles.reportButton} variant="contained" onClick={() => alert('Sorun bildirme ekranına yönlendiriliyor...')}>
-          Sorun Bildir
-        </Button>
-      </Box>
+      <Button sx={styles.reportButton} variant="contained" onClick={() => alert('Sorun bildirme ekranına yönlendiriliyor...')}>
+        Sorun Bildir
+      </Button>
     </Box>
   );
 };
@@ -64,6 +59,7 @@ const styles = {
         backgroundColor: '#fff',
         borderRadius: '8px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        width:"50%",
     },
     subHeader: {
         fontWeight: 'bold',
