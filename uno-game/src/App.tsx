@@ -6,7 +6,8 @@ import RulesPage from './pages/rules';
 import UpdatesScreen from './pages/updates';
 import SupportScreen from './pages/support';
 import Settings from './pages/settings';
-import { MusicProvider } from './context/MusicContext'; // MusicProvider'ı import et
+import { MusicProvider } from './context/MusicContext';
+import { ThemeProvider } from './context/ThemeContext'; // Yeni ThemeProvider'ı ekliyoruz
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -21,18 +22,20 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <MusicProvider> {/* MusicProvider ile sarmalıyoruz */}
-        <div>
-          {isLoading ? <Loading /> : (
-            <Routes>
-              <Route path="/" element={<MainScreen />} />
-              <Route path="/rules" element={<RulesPage />} />
-              <Route path="/updates" element={<UpdatesScreen />} />
-              <Route path="/support" element={<SupportScreen />} />
-              <Route path="/settings" element={<Settings />} />
-            </Routes>
-          )}
-        </div>
+      <MusicProvider> {/* Müzik sarmalayıcısı */}
+        <ThemeProvider> {/* Tema sarmalayıcısı */}
+          <div>
+            {isLoading ? <Loading /> : (
+              <Routes>
+                <Route path="/" element={<MainScreen />} />
+                <Route path="/rules" element={<RulesPage />} />
+                <Route path="/updates" element={<UpdatesScreen />} />
+                <Route path="/support" element={<SupportScreen />} />
+                <Route path="/settings" element={<Settings />} />
+              </Routes>
+            )}
+          </div>
+        </ThemeProvider>
       </MusicProvider>
     </Router>
   );

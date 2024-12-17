@@ -1,12 +1,22 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Drawer, List, ListItemButton, ListItemText, IconButton } from "@mui/material";
+import {
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+  IconButton,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useTheme } from "../context/ThemeContext";
+
 
 const MainScreen: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  const { theme, themeStyles } = useTheme(); // theme ve themeStyles'ı alıyoruz
 
   // Drawer toggle
   const toggleDrawer = (open: boolean) => {
@@ -20,17 +30,30 @@ const MainScreen: React.FC = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div
+      style={{
+        ...styles.container,
+        background: themeStyles[theme].background, // Temadan gelen arka plan
+        color: themeStyles[theme].textColor, // Temadan gelen yazı rengi
+      }}
+    >
       {/* Background Music */}
       <audio ref={audioRef} src="/music/background.mp3" loop />
 
       {/* Menu Icon */}
-      <IconButton style={styles.menuButton} onClick={() => toggleDrawer(true)}>
+      <IconButton
+        style={{ ...styles.menuButton,color:"white"}}
+        onClick={() => toggleDrawer(true)}
+      >
         <MenuIcon />
       </IconButton>
 
       {/* Drawer */}
-      <Drawer anchor="right" open={drawerOpen} onClose={() => toggleDrawer(false)}>
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={() => toggleDrawer(false)}
+      >
         <List>
           <ListItemButton onClick={() => handleDrawerLinkClick("settings")}>
             <ListItemText primary="Ayarlar" />
@@ -43,18 +66,31 @@ const MainScreen: React.FC = () => {
           </ListItemButton>
           <ListItemButton onClick={() => handleDrawerLinkClick("support")}>
             <ListItemText primary="Destek" />
-          </ListItemButton>   
+          </ListItemButton>
         </List>
       </Drawer>
 
-      <h1 style={styles.welcomeText}>DUO'ya Hoşgeldiniz</h1>
+      <h1 style={{ ...styles.welcomeText}}>
+        DUO'ya Hoşgeldiniz
+      </h1>
 
       {/* Buttons */}
       <div style={styles.buttonsContainer}>
-        <button style={styles.button} onClick={() => alert("Oyun başlıyor...")}>
+        <button
+          style={{
+            ...styles.button
+          }}
+          onClick={() => alert("Oyun başlıyor...")}
+        >
           Oyun Başlat
         </button>
-        <button style={styles.button}>Oyundan Çık</button>
+        <button
+          style={{
+            ...styles.button,
+          }}
+        >
+          Oyundan Çık
+        </button>
       </div>
     </div>
   );
@@ -62,25 +98,24 @@ const MainScreen: React.FC = () => {
 
 const styles = {
   container: {
-    width: "100vw",
-    height: "100vh",
+    padding: "20px",
+    textAlign: "center" as const,
+    minHeight: "100vh",
     display: "flex",
     flexDirection: "column" as const,
-    justifyContent: "center",
     alignItems: "center",
-    backgroundImage: "url(/1.jpg)",
+    justifyContent: "center",
+    fontFamily: "Arial, sans-serif",
     backgroundSize: "cover",
-    backgroundPosition: "center",
-    position: "relative" as const,
+    backgroundBlendMode: "overlay" as const, // Desenle renk geçişi
   },
   menuButton: {
     position: "absolute" as const,
     top: "20px",
     right: "20px",
-    color: "white",
+    
   },
   welcomeText: {
-    color: "white",
     fontSize: "3rem",
     fontWeight: "bold",
     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.7)",
@@ -94,8 +129,6 @@ const styles = {
     padding: "15px 30px",
     fontSize: "1.5rem",
     fontWeight: "bold",
-    color: "white",
-    backgroundColor: "#007bff",
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
