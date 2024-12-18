@@ -80,7 +80,7 @@ const MainScreen: React.FC = () => {
           style={{
             ...styles.button
           }}
-          onClick={() => alert("Oyun başlıyor...")}
+          onClick={() => navigate("unogame")} // UNOGame rotasına yönlendirme
         >
           Oyun Başlat
         </button>
