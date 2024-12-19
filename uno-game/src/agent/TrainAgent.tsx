@@ -18,6 +18,7 @@ const TrainAgent: React.FC = () => {
     playCard,
     shuffleDeck,
     dealCardsOneByOne,
+    playedCards,
   } = useGameContext();
 
   const [agent, setAgent] = useState<Player | null>(null);
@@ -39,7 +40,7 @@ const TrainAgent: React.FC = () => {
   useEffect(() => {
     const initializeAgent = async () => {
       // Oyuncular ve deste hazırla
-      const shuffledDeck = shuffleDeck([...deck]);
+      const shuffledDeck = shuffleDeck([...deck],playedCards);
       const initializedPlayers = [
         { id: 1, name: "Agent", hand: [], isBot: true },
         { id: 2, name: "Opponent", hand: [], isBot: true },
