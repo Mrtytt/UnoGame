@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Card } from "../components/cards";
 import { Player } from "../components/players";
-import { botTurn } from "../components/bot"; // Bot turu fonksiyonunu içeri aktar
 
 // GameContext için tipler
 interface GameContextType {
   deck: Card[];
   players: Player[];
   gameOver: boolean;
+  isClockwise: boolean;
   currentPlayerIndex: number;
   currentCard: Card | null;
   setCurrentCard: React.Dispatch<React.SetStateAction<Card>>;
@@ -28,6 +28,7 @@ interface GameContextType {
   handleCardPlay: (playerId: number, card: Card) => void;
   showColorPopup: boolean;
   setShowColorPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsClockwise: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -41,7 +42,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
   const [gameOver, setGameOver] = useState(false);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [currentCard, setCurrentCard] = useState<Card>(deck[0]);
-  const [showColorPopup, setShowColorPopup] = useState(true); // Pop-up gösterme durumu
+  const [showColorPopup, setShowColorPopup] = useState(false); // Pop-up gösterme durumu
+  const [isClockwise, setIsClockwise] = useState(true); // Oyuncu sırası yönü
 
   const shuffleDeck = (deck: Card[]): Card[] => {
     for (let i = deck.length - 1; i > 0; i--) {
@@ -74,24 +76,31 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     return { deck: updatedDeck, players: updatedPlayers };
   };
 
-  const drawCardsForNextPlayer = (playerId: number, numCards: number) => {
-    const nextPlayerIndex =
-      (players.findIndex((p) => p.id === playerId) + 1) % players.length;
+  const drawCardsForNextPlayer = (
+    currentPlayerId: number,
+    numCards: number
+  ) => {
+    // Mevcut oyuncunun dizideki index'ini buluyoruz
+    const currentPlayerIndex = players.findIndex(
+      (p) => p.id === currentPlayerId
+    );
+    const nextPlayerIndex = (currentPlayerIndex + 1) % players.length; // Sıradaki oyuncuyu seç
+
     const nextPlayer = players[nextPlayerIndex];
 
-    // Bu oyuncuya kart çektir
+    // Kartları sıradaki oyuncuya ekliyoruz
     for (let i = 0; i < numCards; i++) {
       const drawnCard = deck.shift();
       if (drawnCard) {
-        nextPlayer.hand.push(drawnCard); // Kartı oyuncunun eline ekle
+        nextPlayer.hand.push(drawnCard);
       }
     }
 
     setDeck([...deck]);
     setPlayers([...players]);
 
-    // Bir sonraki oyuncuya geçiş
-    setCurrentPlayerIndex((nextPlayerIndex + 1) % players.length);
+    // Bir sonraki oyuncuya geçiş yap
+    setCurrentPlayerIndex(nextPlayerIndex);
   };
 
   const drawCard = (playerId: number) => {
@@ -103,13 +112,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
       player.hand.push(drawnCard); // Kartı oyuncunun eline ekle
       setDeck([...deck]); // Yeni desteyi güncelle
       setPlayers([...players]); // Oyuncuları güncelle
-
-      // Eğer botsa, kartı çekmesinin ardından bir sonraki işlemi başlat
-      if (player.isBot) {
-        setTimeout(() => {
-          playCard(player.id, drawnCard); // Kart oynama işlemi
-        }, 1000); // Botun bir saniye sonra kart oynamasını simüle et
-      }
     }
   };
 
@@ -117,27 +119,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     const player = players.find((p) => p.id === playerId);
     if (!player) return;
 
-    // Bot mu kontrol et
-    if (player.isBot) {
-      // Botlar için kart oynama mantığı
-      const validCards = player.hand.filter(
-        (c) =>
-          c.color === currentCard?.color ||
-          c.value === currentCard?.value ||
-          c.color === null
-      );
-
-      if (validCards.length > 0) {
-        const selectedCard = validCards[0]; // İlk geçerli kartı seç
-        // Bot kart oynar
-        return handleCardPlay(playerId, selectedCard);
-      } else {
-        // Eğer kart yoksa, kart çek
-        drawCard(playerId);
-      }
-    }
-
-    // Eğer oyuncuysa, kartı oynat
     if (
       currentCard &&
       (card.color === currentCard.color ||
@@ -152,12 +133,28 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     const player = players.find((p) => p.id === playerId);
     if (!player) return;
 
+    // Oyuncunun elini güncelle
     const updatedHand = player.hand.filter((c) => c !== card);
     const updatedPlayers = players.map((p) =>
       p.id === playerId ? { ...p, hand: updatedHand } : p
     );
 
     setPlayers(updatedPlayers);
+
+    // Eğer Wild+4 kartı oynandıysa
+    if (card.value === "wild+4") {
+      drawCardsForNextPlayer(playerId, 4); // Bir sonraki oyuncuya 4 kart çektir
+      setCurrentCard(card); // Geçerli kartı ayarla
+      setShowColorPopup(true); // Renk seçimi pop-up'ını göster
+    }
+
+    // Eğer Wild kartı oynandıysa
+    if (card.value === "wild") {
+      setCurrentCard(card); // Geçerli kartı ayarla
+      setShowColorPopup(true); // Renk seçimi pop-up'ını göster
+    }
+
+    // Eğer diğer kartlardansa işlemlere devam et
     setCurrentCard(card);
 
     if (checkUNO(player)) {
@@ -167,16 +164,20 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     if (updatedHand.length === 0) {
       alert(`${player.name} kazandı!`);
       setGameOver(true);
+      return; // Oyuncu kazandıysa diğer işlemleri yapmaya gerek yok
     }
 
-    // Wild +4 veya +2 kartı oynanmışsa, bir sonraki oyuncuya kart çekmesi için geç
-    if (card.value === "wild+4" || card.value === "+2") {
-      drawCardsForNextPlayer(playerId, card.value === "wild+4" ? 4 : 2);
-      return;
+    if (card.value === "+2") {
+      drawCardsForNextPlayer(playerId, 2); // 2 kart çektir
     }
-    if (card.value === "wild" || card.value === "wild+4") {
-      setShowColorPopup(true);
-      setCurrentCard(card); // Geçerli kartı güncelle
+
+    if (card.value === "skip") {
+      setCurrentPlayerIndex((prevIndex) => (prevIndex + 2) % players.length);
+    }
+
+    if (card.value === "reverse") {
+      // Oyuncu sırası tersine döner
+      setIsClockwise((prev) => !prev);
     }
 
     // Gelecek oyuncuya geçiş
@@ -195,12 +196,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
   const playTurn = () => {
     const currentPlayer = players[currentPlayerIndex];
 
-    if (currentPlayer.isBot) {
-      // Eğer oyuncu bot ise, botTurn fonksiyonunu çağır
-      botTurn(currentPlayer, currentCard, deck, setDeck, setPlayers);
-    } else {
-      // İnsan oyuncusu için oyun mantığı burada olacak
-    }
+    // İnsan oyuncusu için oyun mantığı burada olacak
 
     // Sonraki oyuncuya geçiş
     const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
@@ -216,6 +212,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
         currentPlayerIndex,
         currentCard,
         showColorPopup,
+        isClockwise,
+        setIsClockwise,
         setShowColorPopup,
         setCurrentCard,
         setDeck,

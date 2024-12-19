@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "../context/ThemeContext";
+import AppDrawer from "../utils/AppDrawer";
 
 
 const MainScreen: React.FC = () => {
@@ -48,27 +49,7 @@ const MainScreen: React.FC = () => {
         <MenuIcon />
       </IconButton>
 
-      {/* Drawer */}
-      <Drawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={() => toggleDrawer(false)}
-      >
-        <List>
-          <ListItemButton onClick={() => handleDrawerLinkClick("settings")}>
-            <ListItemText primary="Ayarlar" />
-          </ListItemButton>
-          <ListItemButton onClick={() => handleDrawerLinkClick("rules")}>
-            <ListItemText primary="Kurallar" />
-          </ListItemButton>
-          <ListItemButton onClick={() => handleDrawerLinkClick("updates")}>
-            <ListItemText primary="Güncellemeler" />
-          </ListItemButton>
-          <ListItemButton onClick={() => handleDrawerLinkClick("support")}>
-            <ListItemText primary="Destek" />
-          </ListItemButton>
-        </List>
-      </Drawer>
+      <AppDrawer drawerOpen={drawerOpen} toggleDrawer={toggleDrawer}></AppDrawer>
 
       <h1 style={{ ...styles.welcomeText}}>
         DUO'ya Hoşgeldiniz
