@@ -1,16 +1,9 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Drawer,
-  List,
-  ListItemButton,
-  ListItemText,
-  IconButton,
-} from "@mui/material";
+import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "../context/ThemeContext";
 import AppDrawer from "../utils/AppDrawer";
-
 
 const MainScreen: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -22,12 +15,6 @@ const MainScreen: React.FC = () => {
   // Drawer toggle
   const toggleDrawer = (open: boolean) => {
     setDrawerOpen(open);
-  };
-
-  // Navigate to page
-  const handleDrawerLinkClick = (path: string) => {
-    navigate(path);
-    setDrawerOpen(false);
   };
 
   return (
@@ -43,23 +30,24 @@ const MainScreen: React.FC = () => {
 
       {/* Menu Icon */}
       <IconButton
-        style={{ ...styles.menuButton,color:"white"}}
+        style={{ ...styles.menuButton, color: "white" }}
         onClick={() => toggleDrawer(true)}
       >
         <MenuIcon />
       </IconButton>
 
-      <AppDrawer drawerOpen={drawerOpen} toggleDrawer={toggleDrawer}></AppDrawer>
+      <AppDrawer
+        drawerOpen={drawerOpen}
+        toggleDrawer={toggleDrawer}
+      ></AppDrawer>
 
-      <h1 style={{ ...styles.welcomeText}}>
-        DUO'ya Hoşgeldiniz
-      </h1>
+      <h1 style={{ ...styles.welcomeText }}>DUO'ya Hoşgeldiniz</h1>
 
       {/* Buttons */}
       <div style={styles.buttonsContainer}>
         <button
           style={{
-            ...styles.button
+            ...styles.button,
           }}
           onClick={() => navigate("unogame")} // UNOGame rotasına yönlendirme
         >
@@ -94,7 +82,6 @@ const styles = {
     position: "absolute" as const,
     top: "20px",
     right: "20px",
-    
   },
   welcomeText: {
     fontSize: "3rem",

@@ -13,8 +13,8 @@ export type Card = {
 };
 
 const colors = ["red", "blue", "green", "yellow"];
-const specialCards = ["+2", "reverse", "skip"];
-const wildCards = ["wild", "wild+4"];
+const specialCards = ["+2", "Reverse", "Skip"];
+const wildCards = ["Wild", "Wild+4"];
 
 export const createDeck = (): Card[] => {
   let deck: Card[] = [];
@@ -38,13 +38,4 @@ export const createDeck = (): Card[] => {
   });
 
   return shuffleDeck(deck); // Desteyi karıştırıyoruz
-};
-
-// Oyunculara kartları dağıtmak için
-export const dealCards = (deck: Card[], numPlayers: number): Card[][] => {
-  const playerHands: Card[][] = [];
-  for (let i = 0; i < numPlayers; i++) {
-    playerHands.push(deck.slice(i * 7, (i + 1) * 7)); // Her oyuncuya 7 kart dağıtıyoruz
-  }
-  return playerHands;
 };

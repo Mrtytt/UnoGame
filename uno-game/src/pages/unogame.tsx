@@ -3,11 +3,8 @@ import { createDeck, Card } from "../components/cards";
 import { createPlayers, Player } from "../components/players";
 import { useGameContext } from "../context/GameContext";
 import { useTheme } from "../context/ThemeContext";
-import { useNavigate } from "react-router-dom";
-import { IconButton } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import AppDrawer from "../utils/AppDrawer";
 import ColorPopup from "../utils/ColorPopup";
+import { getCardStyles } from "../styles/getCardStyles"; // Yeni eklenen import
 
 const UNOGame: React.FC = () => {
   const {
@@ -28,6 +25,7 @@ const UNOGame: React.FC = () => {
     setShowColorPopup,
     showColorPopup,
     playedCards,
+    setIsClockwise,
   } = useGameContext();
 
   const [selectedColor, setSelectedColor] = useState<string>(""); // Seçilen renk
@@ -35,62 +33,20 @@ const UNOGame: React.FC = () => {
   const [gameStarted, setGameStarted] = useState(false); // Yeni state ekledik
 
   const startGame = async () => {
-    const newDeck = createDeck(); 
-    let shuffledDeck = shuffleDeck(newDeck, playedCards); 
-    const createdPlayers = createPlayers(3); 
+    const newDeck = createDeck();
+    let shuffledDeck = shuffleDeck(newDeck, playedCards);
+    const createdPlayers = createPlayers(3);
 
-    let { deck: updatedDeck, players: updatedPlayers } = await dealCardsOneByOne(
-      shuffledDeck,
-      createdPlayers
-    );
+    let { deck: updatedDeck, players: updatedPlayers } =
+      await dealCardsOneByOne(shuffledDeck, createdPlayers);
 
-    setDeck(updatedDeck); 
-    setPlayers(updatedPlayers); 
-    setCurrentCard(updatedDeck[0]); 
+    setDeck(updatedDeck);
+    setPlayers(updatedPlayers);
+    setCurrentCard(updatedDeck[0]);
     setGameOver(false);
-    setCurrentPlayerIndex(0); 
-    setGameStarted(true); // Oyunu başlattıktan sonra gameStarted true yapıyoruz
-  };
-
-  const getCardStyles = (color: string) => {
-    let backgroundColor = "#fff";
-    let textColor = "#000";
-
-    switch (color) {
-      case "red":
-        backgroundColor = "#ff0000";
-        textColor = "#fff";
-        break;
-      case "green":
-        backgroundColor = "#4caf50";
-        textColor = "#fff";
-        break;
-      case "blue":
-        backgroundColor = "#2196f3";
-        textColor = "#fff";
-        break;
-      case "yellow":
-        backgroundColor = "#ffeb3b";
-        textColor = "#000";
-        break;
-      default:
-        backgroundColor = "#000";
-        textColor = "#fff";
-    }
-
-    return {
-      backgroundColor,
-      color: textColor,
-      padding: "5px",
-      borderRadius: "5px",
-      display: "inline-block",
-      cursor: "pointer",
-      margin: "5px",
-      width: "75px", // Sabit kart genişliği
-      height: "75px", // Sabit kart yüksekliği
-      textAlign: "center" as const,
-      fontSize: "16px",
-    };
+    setCurrentPlayerIndex(0);
+    setGameStarted(true);
+    setIsClockwise(true);
   };
 
   const handleColorSelect = (color: string) => {
@@ -107,26 +63,11 @@ const UNOGame: React.FC = () => {
       style={{
         ...styles.container,
         background: themeStyles[theme].background, // Temadan gelen arka plan
-        color: themeStyles[theme].textColor, // Temadan gelen yazı rengi
+        color: themeStyles[theme].textColor,
+        flexDirection: gameStarted ? "row" : "column",
+        alignItems: gameStarted ? "flex-start" : "center", // Temadan gelen yazı rengi
       }}
     >
-      <h1>UNO Game</h1>
-
-      {/* Geçerli kart */}
-      <div style={styles.cardContainer}>
-        <h2>Geçerli Kart</h2>
-        {currentCard && (
-          <div
-            style={{
-              ...styles.card,
-              ...getCardStyles(currentCard?.color || "default"),
-            }}
-          >
-            <span>{currentCard.value}</span>
-          </div>
-        )}
-      </div>
-
       {/* Oyuncuların elleri */}
       <div style={styles.playersContainer}>
         {players.map((player) => (
@@ -172,6 +113,11 @@ const UNOGame: React.FC = () => {
                   style={{
                     ...styles.cardButton,
                     ...getCardStyles(card.color || "default"),
+                    visibility:
+                      currentPlayerIndex ===
+                      players.findIndex((p) => p.id === player.id)
+                        ? "visible" // Sırası gelen oyuncunun isminin yazı rengi
+                        : "hidden",
                   }}
                   onClick={() => playCard(player.id, card)}
                   disabled={
@@ -188,16 +134,31 @@ const UNOGame: React.FC = () => {
         ))}
       </div>
 
-      {/* Kart çekme butonu sağda ortada */}
-      <div style={styles.drawCardButtonContainer}>
-        <button
-          style={styles.drawCardButton}
-          onClick={() => drawCard(currentPlayerIndex)}
-          disabled={gameOver}
-        >
-          Kart Çek
-        </button>
-      </div>
+      {gameStarted && currentCard && (
+        <div style={styles.drawCardButtonContainer}>
+          <button
+            style={styles.drawCardButton}
+            onClick={() => drawCard(currentPlayerIndex)}
+            disabled={gameOver}
+          >
+            Kart Çek
+          </button>
+        </div>
+      )}
+
+      {/* Geçerli kart */}
+      {gameStarted && currentCard && (
+        <div style={styles.cardContainer}>
+          <h3>Geçerli Kart</h3>
+          <div
+            style={{
+              ...getCardStyles(currentCard.color || "default"),
+            }}
+          >
+            <label>{currentCard.value}</label>
+          </div>
+        </div>
+      )}
 
       {/* Başlatma butonu */}
       {!gameOver && (
@@ -226,15 +187,18 @@ const styles = {
     textAlign: "center" as const,
     minHeight: "100vh",
     display: "flex",
-    flexDirection: "column" as const,
-    alignItems: "center",
+
     justifyContent: "center",
     fontFamily: "Arial, sans-serif",
     backgroundSize: "cover",
     backgroundBlendMode: "overlay" as const, // Desenle renk geçişi
   },
   cardContainer: {
-    marginBottom: "20px",
+    position: "absolute" as const,
+    right: "20px",
+    top: "35%",
+    transform: "translateY(-50%)",
+    textAlign: "center" as const,
   },
   drawCardButton: {
     padding: "15px 30px",
@@ -264,9 +228,8 @@ const styles = {
     padding: "5px",
     border: "2px solid #000",
     borderRadius: "8px",
-    margin: "10px",
+    margin: "5px",
     transition: "background-color 0.3s, color 0.3s",
-    height:"25%"
   },
   handContainer: {
     display: "flex",
@@ -283,7 +246,7 @@ const styles = {
     transition: "background-color 0.2s",
   },
   startButton: {
-    padding: "15px 30px",
+    padding: "10px",
     fontSize: "1.2rem",
     background: "#2196f3",
     color: "#fff",
@@ -291,6 +254,10 @@ const styles = {
     borderRadius: "5px",
     cursor: "pointer",
     transition: "background-color 0.3s",
+    position: "absolute" as const,
+    right: "20px",
+    top: "60%",
+    transform: "translateY(-50%)",
   },
   drawCardButtonContainer: {
     position: "absolute" as const,

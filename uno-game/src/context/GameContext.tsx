@@ -107,49 +107,48 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
       (p) => p.id === currentPlayerId
     );
     if (currentPlayerIndex === -1) return;
-  
-    // Çekilecek kartı atanın elinden kaldır (örneğin Wild +4)
-    const updatedCurrentPlayer = {
-      ...players[currentPlayerIndex],
-      hand: players[currentPlayerIndex].hand.slice(1), // Atılan ilk kartı çıkar
-    };
-  
+
     // Bir sonraki oyuncuyu belirle
     const nextPlayerIndex = isClockwise
       ? (currentPlayerIndex + 1) % players.length
       : (currentPlayerIndex - 1 + players.length) % players.length;
-  
+
     const nextPlayer = players[nextPlayerIndex];
     if (!nextPlayer) return;
-  
+
+    const updatedCurrentPlayer = {
+      ...players[currentPlayerIndex],
+      hand: players[currentPlayerIndex].hand.filter(
+        (card) => card.id !== currentCard.id // currentCard.id ile eşleşmeyen kartları elinde tut
+      ),
+    };
     // Çekilecek kartları belirle
     const cardsToDraw = deck.slice(0, numCards);
     const updatedDeck = deck.slice(numCards);
-  
+
     // Bir sonraki oyuncunun elini güncelle
     const updatedNextPlayer = {
       ...nextPlayer,
       hand: [...nextPlayer.hand, ...cardsToDraw],
     };
-  
+
     // Oyuncu listesini güncelle
     const updatedPlayers = players.map((p, index) => {
       if (index === currentPlayerIndex) return updatedCurrentPlayer;
       if (index === nextPlayerIndex) return updatedNextPlayer;
       return p;
     });
-  
+
     // Güncellenmiş oyuncuları ve desteyi ayarla
     setPlayers(updatedPlayers);
     setDeck(updatedDeck);
-  
+
     // Eğer destede yeterince kart kalmadıysa, desteyi yeniden karıştır
     if (updatedDeck.length < numCards) {
       const reshuffledDeck = shuffleDeck(updatedDeck, playedCards);
       setDeck(reshuffledDeck);
     }
   };
-  
 
   const drawCard = (playerId: number) => {
     const player = players.find((p) => p.id === playerId + 1);
@@ -181,33 +180,29 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     const player = players.find((p) => p.id === playerId);
     if (!player) return;
 
-    // 1. Oyuncunun elini güncelle
-    const updatedHand = player.hand.filter(
-      (c) => c.color !== card.color || c.value !== card.value
-    );
+    // 2. Özel kartlar için işlem yap
+    if (card.value === "Wild+4") {
+      drawCardsForNextPlayer(playerId, 4);
+      setShowColorPopup(true);
+      setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
+    } else if (card.value === "Wild") {
+      setShowColorPopup(true);
+    } else if (card.value === "+2") {
+      drawCardsForNextPlayer(playerId, 2);
+      setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
+    } else if (card.value === "Skip") {
+      setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
+    } else if (card.value === "Reverse") {
+      setIsClockwise((prev) => !prev);
+      setCurrentPlayerIndex((prevIndex) => (prevIndex - 2) % players.length);
+    }
+    const updatedHand = player.hand.filter((c) => c.id !== card.id);
+
     const updatedPlayers = players.map((p) =>
       p.id === playerId ? { ...p, hand: updatedHand } : p
     );
 
     setPlayers(updatedPlayers);
-
-    // 2. Özel kartlar için işlem yap
-    if (card.value === "wild+4") {
-      drawCardsForNextPlayer(playerId, 4);
-      setShowColorPopup(true);
-      setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
-    } else if (card.value === "wild") {
-      setShowColorPopup(true);
-    } else if (card.value === "+2") {
-      drawCardsForNextPlayer(playerId, 2);
-      setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
-    } else if (card.value === "skip") {
-      setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
-    } else if (card.value === "reverse") {
-      setIsClockwise((prev) => !prev);
-      setCurrentPlayerIndex((prevIndex) => (prevIndex - 2) % players.length);
-    }
-
     // 3. UNO kontrolü
     if (checkUNO(player)) {
       alert(`${player.name} UNO dedi!`);
