@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Card } from "../components/cards";
 import { Player } from "../components/players";
+import { CloudCircle } from "@mui/icons-material";
 
 // GameContext için tipler
 interface GameContextType {
@@ -139,6 +140,12 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
       return p;
     });
 
+    for (let i = 0; i < numCards; i++) {
+      const drawnCard = deck.shift();
+      if (drawnCard) {
+        nextPlayer.hand.push(drawnCard);
+      }
+    }
     // Güncellenmiş oyuncuları ve desteyi ayarla
     setPlayers(updatedPlayers);
     setDeck(updatedDeck);
@@ -184,17 +191,22 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     if (card.value === "Wild+4") {
       drawCardsForNextPlayer(playerId, 4);
       setShowColorPopup(true);
-      setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
+      playerIndexWithClockwise(isClockwise);
     } else if (card.value === "Wild") {
       setShowColorPopup(true);
     } else if (card.value === "+2") {
       drawCardsForNextPlayer(playerId, 2);
-      setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
+      playerIndexWithClockwise(isClockwise);
     } else if (card.value === "Skip") {
-      setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
+      playerIndexWithClockwise(isClockwise);
     } else if (card.value === "Reverse") {
       setIsClockwise((prev) => !prev);
-      setCurrentPlayerIndex((prevIndex) => (prevIndex - 2) % players.length);
+
+      // Oyuncu dizinini doğru şekilde güncelle
+      setCurrentPlayerIndex((prevIndex) => {
+        const newIndex = (prevIndex - 2 + players.length) % players.length;
+        return newIndex;
+      });
     }
     const updatedHand = player.hand.filter((c) => c.id !== card.id);
 
@@ -224,7 +236,13 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
         : (prevIndex - 1 + players.length) % players.length
     );
   };
-
+  const playerIndexWithClockwise = (isClockwise: boolean) => {
+    if (isClockwise) {
+      setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
+    } else {
+      setCurrentPlayerIndex((prevIndex) => (prevIndex - 1) % players.length);
+    }
+  };
   const checkUNO = (player: Player): boolean => {
     if (player.hand.length === 1) {
       console.log(`${player.name} says UNO!`);

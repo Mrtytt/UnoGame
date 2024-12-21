@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "black" | "white" | "navy";
+type Theme = "black" | "white" | "navy" | "sunset" | "forest" | "candy";
 
 // Tema özelliklerini tanımla
 interface ThemeStyles {
@@ -68,6 +68,27 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       textColor: "#e0def4",
       cardBackground: "rgba(37, 39, 77, 0.9)",
       cardText: "#f0f0f0",
+    },
+    sunset: {
+      background:
+        "linear-gradient(135deg, #ff7e5f, #feb47b), url('https://www.transparenttextures.com/patterns/asfalt-dark.png')",
+      textColor: "#ffffff",
+      cardBackground: "rgba(255, 119, 72, 0.9)",
+      cardText: "#f5f5f5",
+    },
+    forest: {
+      background:
+        "linear-gradient(135deg, #005c5b, #067d68), url('https://www.transparenttextures.com/patterns/green-gobbler.png')",
+      textColor: "#f0fff0",
+      cardBackground: "rgba(34, 94, 84, 0.95)",
+      cardText: "#d4edda",
+    },
+    candy: {
+      background:
+        "linear-gradient(135deg, #ff9a9e, #fad0c4), url('https://www.transparenttextures.com/patterns/candyhole.png')",
+      textColor: "#4b0082",
+      cardBackground: "rgba(255, 182, 193, 0.9)",
+      cardText: "#800080",
     },
   };
 

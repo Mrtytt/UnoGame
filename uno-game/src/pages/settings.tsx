@@ -32,24 +32,24 @@ const Settings: React.FC = () => {
       }}
     >
       <div style={styles.settings}>
-        <h2 style={styles.title}>Oyun Ayarları</h2>
+        <h2 style={styles.title}>Game Seetings</h2>
         <div style={styles.firstPart}>
           <div style={styles.setting}>
-            <label style={styles.volumeLabel}>Zorluk Ayarları</label>
+            <label style={styles.volumeLabel}>Choose Difficulty</label>
             <select
               value={difficulty}
               onChange={handleDifficultyChange}
               style={styles.select}
             >
-              <option value="Kolay">Kolay</option>
-              <option value="Orta">Orta</option>
-              <option value="Zor">Zor</option>
+              <option value="Kolay">Easy</option>
+              <option value="Orta">Medium</option>
+              <option value="Zor">Hard</option>
             </select>
           </div>
           <div style={styles.setting}>
             <audio ref={audioRef} src="/music/background.mp3" loop />
             <div style={styles.volumeControl}>
-              <label style={styles.volumeLabel}>Müzik:</label>
+              <label style={styles.volumeLabel}>Music:</label>
               <input
                 type="range"
                 min="0"
@@ -61,13 +61,13 @@ const Settings: React.FC = () => {
               />
             </div>
             <button style={styles.musicButton} onClick={toggleMusic}>
-              {isPlaying ? "Duraklat" : "Çal"}
+              {isPlaying ? "Pause" : "Play"}
             </button>
           </div>
         </div>
         <div style={styles.setting}>
           <div style={styles.themeSelector}>
-            <h3>Tema Seçici</h3>
+            <h3>Choose Theme</h3>
             <button
               style={{
                 ...styles.themeButton,
@@ -76,7 +76,7 @@ const Settings: React.FC = () => {
               }}
               onClick={() => changeTheme("black")}
             >
-              Siyah
+              Black
             </button>
             <button
               style={{
@@ -86,7 +86,7 @@ const Settings: React.FC = () => {
               }}
               onClick={() => changeTheme("white")}
             >
-              Beyaz
+              White
             </button>
             <button
               style={{
@@ -96,7 +96,37 @@ const Settings: React.FC = () => {
               }}
               onClick={() => changeTheme("navy")}
             >
-              Mavi
+              Blue
+            </button>
+            <button
+              style={{
+                ...styles.themeButton,
+                backgroundColor: "#ff7e5f",
+                color: "white",
+              }}
+              onClick={() => changeTheme("sunset")}
+            >
+              Sunset
+            </button>
+            <button
+              style={{
+                ...styles.themeButton,
+                backgroundColor: "#005c5b",
+                color: "white",
+              }}
+              onClick={() => changeTheme("forest")}
+            >
+              Forest
+            </button>
+            <button
+              style={{
+                ...styles.themeButton,
+                backgroundColor: "#ff9a9e",
+                color: "black",
+              }}
+              onClick={() => changeTheme("candy")}
+            >
+              Candy
             </button>
           </div>
         </div>
@@ -200,14 +230,16 @@ const styles = {
   themeSelector: {
     marginTop: "20px",
     display: "flex",
-    justifyContent: "space-between",
-    gap: "20px",
+    flexDirection: "column" as const,
+    alignItems: "center",
+    gap: "10px",
   },
   themeButton: {
     padding: "10px",
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
+    width: "100%",
   },
   firstPart: {
     flexDirection: "row" as const,

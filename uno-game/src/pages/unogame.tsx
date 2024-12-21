@@ -79,7 +79,7 @@ const UNOGame: React.FC = () => {
                 currentPlayerIndex ===
                 players.findIndex((p) => p.id === player.id)
                   ? "#001f3f" // Sırası gelen oyuncunun arka plan rengi
-                  : "#fff", // Diğer oyuncular için varsayılan arka plan rengi
+                  : "#fae687", // Diğer oyuncular için varsayılan arka plan rengi
               color:
                 currentPlayerIndex ===
                 players.findIndex((p) => p.id === player.id)
@@ -107,32 +107,74 @@ const UNOGame: React.FC = () => {
               {player.name}
             </h3>
             <div style={styles.handContainer}>
-              {player.hand.map((card) => (
+              {player.hand.map((card, index) => (
                 <button
-                  key={card.id}
+                  key={card.id || index}
                   style={{
                     ...styles.cardButton,
-                    ...getCardStyles(card.color || "default"),
-                    visibility:
-                      currentPlayerIndex ===
-                      players.findIndex((p) => p.id === player.id)
-                        ? "visible" // Sırası gelen oyuncunun isminin yazı rengi
-                        : "hidden",
+                    ...(currentPlayerIndex ===
+                    players.findIndex((p) => p.id === player.id)
+                      ? getCardStyles(card.color || "default", card.value)
+                      : {
+                          backgroundImage: `url('/cardback.png')`, // Kartın sırtının PNG yolu
+                          backgroundSize: "cover",
+                          backgroundRepeat: "no-repeat",
+                          border: "none",
+                          width: "85px", // Fixed card width
+                          height: "130px", // Fixed card height
+                        }),
                   }}
-                  onClick={() => playCard(player.id, card)}
+                  onClick={() =>
+                    currentPlayerIndex ===
+                    players.findIndex((p) => p.id === player.id)
+                      ? playCard(player.id, card)
+                      : null
+                  }
                   disabled={
                     gameOver ||
                     currentPlayerIndex !==
                       players.findIndex((p) => p.id === player.id)
                   }
                 >
-                  {card.value}
+                  {currentPlayerIndex ===
+                  players.findIndex((p) => p.id === player.id)
+                    ? card.value // Sırası gelen oyuncunun kart değeri
+                    : ""}
                 </button>
               ))}
             </div>
           </div>
         ))}
       </div>
+
+      {/* Geçerli kart */}
+      {gameStarted && currentCard && (
+        <div style={styles.cardContainer}>
+          <h3>Current Card</h3>
+          <div
+            style={{
+              height: "75px",
+              width: "75px",
+              borderColor: "white",
+              display: "flex", // Flexbox aktif
+              justifyContent: "center", // Yatay ortalama
+              alignItems: "center", // Dikey ortalama
+              backgroundColor: currentCard.color || "transparent",
+              borderRadius: "10px",
+              fontSize: "20px",
+            }}
+          >
+            <label
+              style={{
+                color: "black",
+                textAlign: "center",
+              }}
+            >
+              {currentCard.value}
+            </label>
+          </div>
+        </div>
+      )}
 
       {gameStarted && currentCard && (
         <div style={styles.drawCardButtonContainer}>
@@ -141,34 +183,31 @@ const UNOGame: React.FC = () => {
             onClick={() => drawCard(currentPlayerIndex)}
             disabled={gameOver}
           >
-            Kart Çek
+            Draw Card
+          </button>
+        </div>
+      )}
+      {/* Başlatma butonu */}
+      {!gameOver && (
+        <div style={styles.startButtonContainer}>
+          <button
+            style={styles.startButton}
+            onClick={startGame}
+            disabled={gameOver}
+          >
+            Start Game
           </button>
         </div>
       )}
 
-      {/* Geçerli kart */}
-      {gameStarted && currentCard && (
-        <div style={styles.cardContainer}>
-          <h3>Geçerli Kart</h3>
-          <div
-            style={{
-              ...getCardStyles(currentCard.color || "default"),
-            }}
-          >
-            <label>{currentCard.value}</label>
-          </div>
+      {/* Oyun bitişi */}
+      {gameOver && (
+        <div style={styles.gameOverContainer}>
+          <button style={styles.startButton} onClick={startGame}>
+            Restart Game
+          </button>
         </div>
       )}
-
-      {/* Başlatma butonu */}
-      {!gameOver && (
-        <button style={styles.startButton} onClick={startGame}>
-          Oyunu Başlat
-        </button>
-      )}
-
-      {/* Oyun bitişi */}
-      {gameOver && <h2>Oyun Bitti!</h2>}
 
       {/* Renk değiştirme pop-up */}
       {showColorPopup && (
@@ -187,29 +226,62 @@ const styles = {
     textAlign: "center" as const,
     minHeight: "100vh",
     display: "flex",
-
     justifyContent: "center",
     fontFamily: "Arial, sans-serif",
     backgroundSize: "cover",
     backgroundBlendMode: "overlay" as const, // Desenle renk geçişi
+    height: "100%",
   },
   cardContainer: {
     position: "absolute" as const,
     right: "20px",
-    top: "35%",
+    top: "40%",
     transform: "translateY(-50%)",
     textAlign: "center" as const,
+  },
+  drawCardButtonContainer: {
+    display: "flex",
+    justifyContent:"flex-end",
+    position: "absolute" as const,
+    top: "50%", // Draw Card butonu üstte olacak
+    width: "100%",
+    zIndex: 1, // Draw Card butonunun üstte görünmesini sağlar
+    right:"10px"
   },
   drawCardButton: {
     padding: "15px 30px",
     fontSize: "1.2rem",
-    background: "#4caf50",
+    background: "#4caf50", // Yeşil arka plan
     color: "#fff",
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
     transition: "background-color 0.3s",
-    right: "20px",
+    "&:hover": {
+      background: "#388e3c", // Hover efekti
+    },
+  },
+  startButtonContainer: {
+    display: "flex",
+    justifyContent: "flex-end",
+    position: "absolute" as const,
+    top: "60%", // Draw Card butonu üstte olacak
+    width: "100%",
+    zIndex: 1, // Draw Card butonunun üstte görünmesini sağlar
+    right:"10px"
+  },
+  startButton: {
+    padding: "15px 30px",
+    fontSize: "1.2rem",
+    background: "#3498db", // Mavi arka plan
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    transition: "background-color 0.3s",
+    "&:hover": {
+      background: "#2980b9", // Hover efekti
+    },
   },
   card: {
     padding: "10px",
@@ -226,7 +298,6 @@ const styles = {
   },
   playerContainer: {
     padding: "5px",
-    border: "2px solid #000",
     borderRadius: "8px",
     margin: "5px",
     transition: "background-color 0.3s, color 0.3s",
@@ -245,24 +316,10 @@ const styles = {
     background: "#fff",
     transition: "background-color 0.2s",
   },
-  startButton: {
-    padding: "10px",
-    fontSize: "1.2rem",
-    background: "#2196f3",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    transition: "background-color 0.3s",
+  gameOverContainer: {
     position: "absolute" as const,
     right: "20px",
     top: "60%",
-    transform: "translateY(-50%)",
-  },
-  drawCardButtonContainer: {
-    position: "absolute" as const,
-    right: "20px",
-    top: "50%",
     transform: "translateY(-50%)",
   },
 };
