@@ -14,7 +14,7 @@ const ColorPopup: React.FC<ColorPopupProps> = ({ onColorSelect, colors }) => {
       left: "50%",
       transform: "translate(-50%, -50%)",
       backgroundColor: "#fff",
-      padding: "20px",
+      padding: "10px",
       borderRadius: "10px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
       zIndex: 999,
@@ -26,12 +26,28 @@ const ColorPopup: React.FC<ColorPopupProps> = ({ onColorSelect, colors }) => {
       borderRadius: "5px",
       cursor: "pointer",
       fontSize: "16px",
+      gap:"5px"
+    },
+    heading: {
+      fontSize: '24px',
+      fontWeight: '600',
+      color: '#333',
+      marginBottom: '25px',
+      marginTop:'10px',
+      textTransform: 'uppercase' as const,
+      letterSpacing: '1px',
+      textShadow: '1px 1px 3px rgba(0, 0, 0, 0.2)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%', // Center vertically if needed
+      margin: 0, // Remove default margin
     },
   };
 
   return (
     <div style={styles.popup}>
-      <h3>Renk Seçin:</h3>
+      <h3 style={styles.heading}>Choose Color</h3>
       {colors.map((color) => (
         <button
           key={color}

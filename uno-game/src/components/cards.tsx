@@ -9,12 +9,13 @@ const shuffleDeck = (deck: Card[]): Card[] => {
 export type Card = {
   id: string; // Her kart için benzersiz bir ID
   color: string | null; // null joker kartlar için
-  value: string | number;
+  value: string | number; // Kartın üzerindeki değer
+  points: number; // Kartın puan değeri
 };
 
 const colors = ["red", "blue", "green", "yellow"];
 const specialCards = ["+2", "Reverse", "Skip"];
-const wildCards = ["Wild", "Wild+4"];
+const wildCards = ["Wild", "+4"];
 
 export const createDeck = (): Card[] => {
   let deck: Card[] = [];
@@ -23,17 +24,33 @@ export const createDeck = (): Card[] => {
   // Sayı kartlarını ekle
   colors.forEach((color) => {
     for (let i = 0; i <= 9; i++) {
-      deck.push({ id: `card-${cardId++}`, color, value: i });
+      deck.push({
+        id: `card-${cardId++}`,
+        color,
+        value: i,
+        points: i, // Sayı kartlarının puanı kendi değerine eşit
+      });
     }
+    // Özel kartları ekle
     specialCards.forEach((card) => {
-      deck.push({ id: `card-${cardId++}`, color, value: card });
+      deck.push({
+        id: `card-${cardId++}`,
+        color,
+        value: card,
+        points: 20, // Özel kartların puanı 20
+      });
     });
   });
 
-  // Joker kartlar
+  // Joker kartları ekle
   wildCards.forEach((card) => {
     for (let i = 0; i < 4; i++) {
-      deck.push({ id: `card-${cardId++}`, color: null, value: card });
+      deck.push({
+        id: `card-${cardId++}`,
+        color: null,
+        value: card,
+        points: 50, // Joker kartların puanı 50
+      });
     }
   });
 

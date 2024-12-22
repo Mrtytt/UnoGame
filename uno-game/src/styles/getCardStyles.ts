@@ -25,17 +25,19 @@ export const getCardStyles = (color: string, value: string | number) => {
   }
 
   // Value'nin türüne göre font size belirleniyor
-  const fontSize = typeof value === "number" ? "36px" : "16px";
+  const fontSize = typeof value === "number" ? "50px" : "20px";
 
   return {
     backgroundColor,
     color: textColor,
-    borderRadius: "5px",
-    display: "inline-block",
     cursor: "pointer",
     width: "75px", // Fixed card width
     height: "100px", // Fixed card height
     textAlign: "center" as const,
     fontSize,
+    borderRadius: "10px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   };
 };

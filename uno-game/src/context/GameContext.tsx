@@ -55,6 +55,16 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
       const reshuffledDeck = [...playedCards];
       playedCards.length = 0; // Oynanan kartları sıfırla
 
+      // +4 ve Wild kartlarının color bilgisini varsayılan hale getir
+      reshuffledDeck.forEach((card) => {
+        if (
+          (card.value === "+4" || card.value === "Wild") &&
+          card.color !== undefined
+        ) {
+          card.color = "default"; // Varsayılan renk (ör. "default" olarak belirledik)
+        }
+      });
+
       // Kartları karıştır
       for (let i = reshuffledDeck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -173,6 +183,12 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     const player = players.find((p) => p.id === playerId);
     if (!player) return;
 
+    // Wild ve +4 kartlarının her durumda oynanabilmesi
+    if (card.value === "Wild" || card.value === "+4") {
+      return handleCardPlay(playerId, card);
+    }
+
+    // Diğer kartlar için currentCard'a göre kontrol
     if (
       currentCard &&
       (card.color === currentCard.color ||
@@ -182,13 +198,19 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
       return handleCardPlay(playerId, card);
     }
   };
-
+  const checkUNO = (player: Player): boolean => {
+    if (player.hand.length === 2) {
+      console.log(`${player.name} says UNO!`);
+      return true;
+    }
+    return false;
+  };
   const handleCardPlay = (playerId: number, card: Card) => {
     const player = players.find((p) => p.id === playerId);
     if (!player) return;
 
     // 2. Özel kartlar için işlem yap
-    if (card.value === "Wild+4") {
+    if (card.value === "+4") {
       drawCardsForNextPlayer(playerId, 4);
       setShowColorPopup(true);
       playerIndexWithClockwise(isClockwise);
@@ -219,10 +241,22 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     if (checkUNO(player)) {
       alert(`${player.name} UNO dedi!`);
     }
-
+    const calculateRemainingPoints = (playerId: number): number => {
+      let totalPoints = 0;
+      players.forEach((player) => {
+        // Eğer oyuncu, mevcut oyuncuysa (yani elindeki kartları hesaba katma)
+        if (player.id !== playerId) {
+          player.hand.forEach((card) => {
+            totalPoints += card.points;
+          });
+        }
+      });
+      return totalPoints;
+    };
     // 4. Oyunu kazananı kontrol et
     if (updatedHand.length === 0) {
       alert(`${player.name} kazandı!`);
+      alert(`Kazanan puanı: ${calculateRemainingPoints(playerId)}`); // Kazanan puanını göster
       setGameOver(true);
       return;
     }
@@ -242,13 +276,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     } else {
       setCurrentPlayerIndex((prevIndex) => (prevIndex - 1) % players.length);
     }
-  };
-  const checkUNO = (player: Player): boolean => {
-    if (player.hand.length === 1) {
-      console.log(`${player.name} says UNO!`);
-      return true;
-    }
-    return false;
   };
 
   // Oyuncu sırasını yönetmek

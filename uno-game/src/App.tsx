@@ -41,7 +41,7 @@ const App: React.FC = () => {
                   <Route path="/updates" element={<UpdatesScreen />} />
                   <Route path="/support" element={<SupportScreen />} />
                   <Route path="/settings" element={<Settings />} />
-                  <Route path="unogame" element={<UNOGame />} />
+                  <Route path="/unogame" element={<UNOGame />} />
                 </Routes>
               )}
             </div>
