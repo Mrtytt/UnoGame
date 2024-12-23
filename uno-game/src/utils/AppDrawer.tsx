@@ -1,37 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { List, ListItemButton, ListItemText, Drawer } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import DrawerButton from "./DrawerButton";
 
-interface DrawerProps {
-  drawerOpen: boolean;
-  toggleDrawer: (open: boolean) => void;
-}
-
-const AppDrawer: React.FC<DrawerProps> = ({ drawerOpen, toggleDrawer }) => {
+const AppDrawer: React.FC = () => {
   const navigate = useNavigate();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleDrawerLinkClick = (path: string) => {
     navigate(path);
-    toggleDrawer(false);
+    setDrawerOpen(false); // Close drawer after navigation
   };
 
   return (
-    <Drawer anchor="right" open={drawerOpen} onClose={() => toggleDrawer(false)}>
-      <List>
-        <ListItemButton onClick={() => handleDrawerLinkClick("settings")}>
-          <ListItemText primary="Ayarlar" />
-        </ListItemButton>
-        <ListItemButton onClick={() => handleDrawerLinkClick("rules")}>
-          <ListItemText primary="Kurallar" />
-        </ListItemButton>
-        <ListItemButton onClick={() => handleDrawerLinkClick("updates")}>
-          <ListItemText primary="Güncellemeler" />
-        </ListItemButton>
-        <ListItemButton onClick={() => handleDrawerLinkClick("support")}>
-          <ListItemText primary="Destek" />
-        </ListItemButton>
-      </List>
-    </Drawer>
+    <>
+      <DrawerButton drawerOpen={drawerOpen} toggleDrawer={setDrawerOpen} />
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)} // Close drawer on outside click
+      >
+        <List>
+          <ListItemButton onClick={() => handleDrawerLinkClick("settings")}>
+            <ListItemText primary="Settings" />
+          </ListItemButton>
+          <ListItemButton onClick={() => handleDrawerLinkClick("rules")}>
+            <ListItemText primary="Rules" />
+          </ListItemButton>
+          <ListItemButton onClick={() => handleDrawerLinkClick("updates")}>
+            <ListItemText primary="Updates" />
+          </ListItemButton>
+          <ListItemButton onClick={() => handleDrawerLinkClick("support")}>
+            <ListItemText primary="Support" />
+          </ListItemButton>
+        </List>
+      </Drawer>
+    </>
   );
 };
 

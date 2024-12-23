@@ -1,48 +1,66 @@
-import React from "react";
-import { Typography, Box, List, ListItem, ListItemText } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Typography, Box, List, ListItem, ListItemText, CircularProgress } from "@mui/material";
 import { useTheme } from "../context/ThemeContext";
+import axios from "axios";
 
 const UpdatesScreen: React.FC = () => {
-  const updates = [
-    {
-      version: "1.0.1",
-      date: "15/12/2024",
-      changes: ["Hata düzeltmeleri", "Performans iyileştirmeleri"],
-    },
-    {
-      version: "1.0.0",
-      date: "10/12/2024",
-      changes: ["İlk sürüm yayında!", "Temel oyun işlevleri"],
-    },
-  ];
-  const { theme, themeStyles } = useTheme(); // theme ve themeStyles'ı alıyoruz
+  const [updates, setUpdates] = useState<{ version: string; date: string; changes: string[] }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { theme, themeStyles } = useTheme();
+
+  useEffect(() => {
+    const fetchUpdates = async () => {
+      try {
+        const response = await axios.get(
+          "https://api.github.com/repos/Mrtytt/UnoGame/releases"
+        );
+        const fetchedUpdates = response.data.map((release: any) => ({
+          version: release.tag_name,
+          date: new Date(release.published_at).toLocaleDateString(),
+          changes: release.body.split("\n").filter((line: string) => line.trim() !== ""),
+        }));
+        setUpdates(fetchedUpdates);
+      } catch (error) {
+        console.error("Error fetching updates:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUpdates();
+  }, []);
 
   return (
-    <Box sx={{
-      ...styles.container,
-      background: themeStyles[theme].background, // Temadan gelen arka plan
-      color: themeStyles[theme].textColor, // Temadan gelen yazı rengi
-    }}>
+    <Box
+      sx={{
+        ...styles.container,
+        background: themeStyles[theme].background,
+        color: themeStyles[theme].textColor,
+      }}
+    >
       <Typography variant="h4" sx={styles.header}>
-        Güncellemeler
+        Updates
       </Typography>
-      <List sx={styles.list}>
-        {updates.map((update, index) => (
-          <Box key={index} sx={styles.updateCard}>
-            <Typography variant="h6" sx={styles.version}>
-              Sürüm: {update.version}
-            </Typography>
-            <Typography sx={styles.date}>Tarih: {update.date}</Typography>
-            <List sx={styles.changesList}>
-              {update.changes.map((change, idx) => (
-                <ListItem key={idx} sx={styles.changeItem}>
-                  <ListItemText primary={`- ${change}`} />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-        ))}
-      </List>
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <List sx={styles.list}>
+          {updates.map((update, index) => (
+            <Box key={index} sx={styles.updateCard}>
+              <Typography variant="h6" sx={styles.version}>
+                Version: {update.version}
+              </Typography>
+              <Typography sx={styles.date}>Date: {update.date}</Typography>
+              <List sx={styles.changesList}>
+                {update.changes.map((change, idx) => (
+                  <ListItem key={idx} sx={styles.changeItem}>
+                    <ListItemText primary={`- ${change}`} />
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+          ))}
+        </List>
+      )}
     </Box>
   );
 };
@@ -58,7 +76,7 @@ const styles = {
     justifyContent: "center",
     fontFamily: "Arial, sans-serif",
     backgroundSize: "cover",
-    backgroundBlendMode: "overlay" as const, // Desenle renk geçişi
+    backgroundBlendMode: "overlay" as const,
   },
   header: {
     color: "#333",

@@ -9,57 +9,56 @@ import {
 } from "@mui/material";
 import { useTheme } from "../context/ThemeContext";
 
-
 const SupportScreen: React.FC = () => {
-  const { theme, themeStyles } = useTheme(); // theme ve themeStyles'ı alıyoruz
+  const { theme, themeStyles } = useTheme(); // Get theme and theme styles
 
   return (
     <Box
       style={{
         ...styles.container,
-        background: themeStyles[theme].background, // Temadan gelen arka plan
-        color: themeStyles[theme].textColor, // Temadan gelen yazı rengi
+        background: themeStyles[theme].background, // Background from theme
+        color: themeStyles[theme].textColor, // Text color from theme
       }}
     >
       <Typography variant="h4" sx={styles.header}>
-        Destek
+        Support
       </Typography>
       <Box sx={styles.section}>
         <Typography variant="h6" sx={styles.subHeader}>
-          Sıkça Sorulan Sorular
+          Frequently Asked Questions
         </Typography>
         <List>
           <ListItem sx={styles.listItem}>
             <ListItemText
-              primary="Uno nasıl oynanır?"
-              secondary="Detaylı rehber için kurallar sekmesine göz atın."
+              primary="How to play Uno?"
+              secondary="For a detailed guide, check the rules section."
             />
           </ListItem>
           <ListItem sx={styles.listItem}>
             <ListItemText
-              primary="Hata bildirimi nasıl yapılır?"
-              secondary="Destek ekibine ulaşabilirsiniz."
+              primary="How to report a bug?"
+              secondary="You can reach out to the support team."
             />
           </ListItem>
         </List>
       </Box>
       <Box sx={styles.section}>
         <Typography variant="h6" sx={styles.subHeader}>
-          İletişim
+          Contact
         </Typography>
         <Typography sx={styles.contactInfo}>
-          E-posta: support@uno.com
+          E-Mail: support@uno.com
         </Typography>
         <Typography sx={styles.contactInfo}>
-          Telefon: +90 555 123 45 67
+          Phone: +90 555 123 45 67
         </Typography>
       </Box>
       <Button
         sx={styles.reportButton}
         variant="contained"
-        onClick={() => alert("Sorun bildirme ekranına yönlendiriliyor...")}
+        onClick={() => alert("Redirecting to issue reporting screen...")}
       >
-        Sorun Bildir
+        Contact Us
       </Button>
     </Box>
   );
@@ -76,7 +75,7 @@ const styles = {
     justifyContent: "center",
     fontFamily: "Arial, sans-serif",
     backgroundSize: "cover",
-    backgroundBlendMode: "overlay" as const, // Desenle renk geçişi
+    backgroundBlendMode: "overlay" as const, // Background color transition effect
   },
   header: {
     color: "#007bff",
@@ -86,30 +85,36 @@ const styles = {
   },
   section: {
     marginBottom: "20px",
-    padding: "15px",
+    padding: "20px",
     backgroundColor: "#fff",
     borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    width: "50%",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+    width: "60%",
+    maxWidth: "600px", // Ensures responsiveness
   },
   subHeader: {
     fontWeight: "bold",
-    marginBottom: "10px",
+    marginBottom: "15px",
     color: "#333",
   },
   listItem: {
-    padding: "5px 0",
+    padding: "10px 0",
     color: "#555",
+    borderBottom: "1px solid #f1f1f1", // Adds separation between items
   },
   contactInfo: {
-    margin: "5px 0",
-    fontSize: "1rem",
+    margin: "8px 0",
+    fontSize: "1.1rem",
     color: "#555",
   },
   reportButton: {
-    marginTop: "10px",
+    marginTop: "20px",
     backgroundColor: "#e74c3c",
     color: "#fff",
+    padding: "12px 24px",
+    fontSize: "16px",
+    fontWeight: "bold",
+    borderRadius: "5px",
     "&:hover": {
       backgroundColor: "#c0392b",
     },

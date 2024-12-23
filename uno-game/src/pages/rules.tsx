@@ -1,40 +1,30 @@
-import React from "react";
 import { useTheme } from "../context/ThemeContext";
+import rules from "../utils/Rules";
 
 const RulesPage = () => {
-  const { theme, themeStyles } = useTheme(); // theme ve themeStyles'ı alıyoruz
+  const { theme, themeStyles } = useTheme(); // Get theme and themeStyles
 
   return (
     <div
       style={{
         ...styles.container,
-        background: themeStyles[theme].background, // Temadan gelen arka plan
-        color: themeStyles[theme].textColor, // Temadan gelen yazı rengi
+        background: themeStyles[theme].background, // Background from theme
+        color: themeStyles[theme].textColor, // Text color from theme
       }}
     >
       <h1 style={{ ...styles.title, color: themeStyles[theme].textColor }}>
-        UNO Oyun Kuralları
+        UNO Game Rules
       </h1>
       <ul
         style={{
           ...styles.rulesList,
-          backgroundColor: themeStyles[theme].cardBackground, // Temadan gelen kart arka planı
-          color: themeStyles[theme].cardText, // Temadan gelen kart yazı rengi
+          backgroundColor: themeStyles[theme].cardBackground, // Card background from theme
+          color: themeStyles[theme].cardText, // Card text color from theme
         }}
       >
-        <li>UNO, 2 ila 10 oyuncu ile oynanabilen bir kart oyunudur.</li>
-        <li>Her oyuncuya 7 kart dağıtılır.</li>
-        <li>
-          Oyuncular sırasıyla kart oynarlar. Oynadıkları kart, önceki kartla aynı
-          renk veya aynı sayıya sahip olmalıdır.
-        </li>
-        <li>Renk değiştirme veya kartın yönünü değiştirme gibi özel kartlar mevcuttur.</li>
-        <li>
-          Eğer bir oyuncunun elinde sadece bir kart kaldıysa, "UNO!" demek
-          zorundadır. Aksi takdirde, ceza olarak 2 kart çeker.
-        </li>
-        <li>Oyunun amacı, kartları bitirip ilk önce oyunu bitirmektir.</li>
-        <li>Oyun bitene kadar oyuncular sırayla kartlarını oynar ve oyun devam eder.</li>
+        {rules.map((rule, index) => (
+          <li key={index}>{rule}</li>
+        ))}
       </ul>
     </div>
   );
@@ -51,13 +41,13 @@ const styles = {
     justifyContent: "center",
     fontFamily: "Arial, sans-serif",
     backgroundSize: "cover",
-    backgroundBlendMode: "overlay" as const, // Desenle renk geçişi
+    backgroundBlendMode: "overlay" as const, // Blended background effect
   },
   title: {
     fontSize: "2.5rem",
     marginBottom: "20px",
     fontWeight: "bold",
-    textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)", // Göze hoş gelen bir başlık efekti
+    textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)", // Appealing title effect
   },
   rulesList: {
     listStyleType: "disc",
@@ -69,7 +59,7 @@ const styles = {
     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
     fontSize: "1.1rem",
     lineHeight: "1.8",
-    backdropFilter: "blur(5px)", // Hafif bulanıklık efekti
+    backdropFilter: "blur(5px)", // Subtle blur effect
   },
 };
 

@@ -1,21 +1,17 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IconButton } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "../context/ThemeContext";
 import AppDrawer from "../utils/AppDrawer";
+import BackButton from "../utils/BackButton";
+import DrawerButton from "../utils/DrawerButton";
 
 const MainScreen: React.FC = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const { theme, themeStyles } = useTheme(); // theme ve themeStyles'ı alıyoruz
 
   // Drawer toggle
-  const toggleDrawer = (open: boolean) => {
-    setDrawerOpen(open);
-  };
 
   return (
     <div
@@ -28,20 +24,10 @@ const MainScreen: React.FC = () => {
       {/* Background Music */}
       <audio ref={audioRef} src="/music/background.mp3" loop />
 
-      {/* Menu Icon */}
-      <IconButton
-        style={{ ...styles.menuButton, color: "white" }}
-        onClick={() => toggleDrawer(true)}
-      >
-        <MenuIcon />
-      </IconButton>
+      <BackButton />
+      <AppDrawer />
 
-      <AppDrawer
-        drawerOpen={drawerOpen}
-        toggleDrawer={toggleDrawer}
-      ></AppDrawer>
-
-      <h1 style={{ ...styles.welcomeText }}>DUO'ya Hoşgeldiniz</h1>
+      <h1 style={{ ...styles.welcomeText }}>Welcome to UNO!</h1>
 
       {/* Buttons */}
       <div style={styles.buttonsContainer}>
@@ -51,14 +37,14 @@ const MainScreen: React.FC = () => {
           }}
           onClick={() => navigate("unogame")} // UNOGame rotasına yönlendirme
         >
-          Oyun Başlat
+          Start Game
         </button>
         <button
           style={{
             ...styles.button,
           }}
         >
-          Oyundan Çık
+          Exit
         </button>
       </div>
     </div>
@@ -77,11 +63,6 @@ const styles = {
     fontFamily: "Arial, sans-serif",
     backgroundSize: "cover",
     backgroundBlendMode: "overlay" as const, // Desenle renk geçişi
-  },
-  menuButton: {
-    position: "absolute" as const,
-    top: "20px",
-    right: "20px",
   },
   welcomeText: {
     fontSize: "3rem",

@@ -5,6 +5,7 @@ import { useTheme } from "../context/ThemeContext";
 import ColorPopup from "../utils/ColorPopup";
 import React, { useState, useEffect } from "react";
 import PlayerHand from "../utils/Playerhand";
+import BackButton from "../utils/BackButton";
 
 const UNOGame: React.FC = () => {
   const {
@@ -84,6 +85,7 @@ const UNOGame: React.FC = () => {
         color: themeStyles[theme].textColor,
       }}
     >
+      <BackButton></BackButton>
       {/* Üstteki oyuncu */}
       <div style={{ ...styles.playersContainer, top: "10px" }}>
         {players.slice(1, 2).map((player) => (
@@ -146,6 +148,7 @@ const UNOGame: React.FC = () => {
             style={{
               ...styles.card,
               backgroundColor: currentCard.color || "transparent",
+              color: currentCard.color === "yellow" ? "black" : "white",
             }}
           >
             {currentCard.value}
@@ -188,6 +191,8 @@ const styles = {
     justifyContent: "center",
     minHeight: "100vh",
     position: "relative" as const,
+    backgroundSize: "cover",
+    backgroundBlendMode: "overlay" as const, // Desenle renk geçişi
   },
   playersContainer: {
     position: "absolute" as const,
@@ -229,7 +234,7 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     fontSize: "20px",
-    color: "#000",
+    color: "#fff",
     marginLeft:"25%"
   },
   drawCardButton: {
