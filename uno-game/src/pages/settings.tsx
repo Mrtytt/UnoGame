@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useMusic } from "../context/MusicContext";
 import { useTheme } from "../context/ThemeContext";
+import BackButton from "../utils/BackButton";
 
 const Settings: React.FC = () => {
   const { isPlaying, toggleMusic, volume, setVolume } = useMusic();
@@ -38,6 +39,7 @@ const Settings: React.FC = () => {
         color: themeStyles[theme].textColor,
       }}
     >
+      <BackButton></BackButton>
       <div style={styles.settings}>
         <h2 style={styles.title}>Settings</h2>
 

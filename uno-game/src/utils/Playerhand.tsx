@@ -1,5 +1,6 @@
 import React from "react";
 import { useGameContext } from "../context/GameContext";
+import { useTheme } from "../context/ThemeContext";
 import { Player } from "../components/players";
 import { getCardStyles } from "../styles/getCardStyles";
 
@@ -13,19 +14,34 @@ const PlayerHand = ({
   isCurrent: boolean;
 }) => {
   const { playCard } = useGameContext();
+  const { themeStyles, theme } = useTheme();
 
   const visibleCards = player.hand.slice(0, MAX_VISIBLE_CARDS);
   const remainingCardsCount = player.hand.length - MAX_VISIBLE_CARDS;
+  const currentTheme = themeStyles[theme];
 
   return (
     <div
       style={{
         ...styles.playerContainer,
-        backgroundColor: isCurrent ? "#001f3f" : "#dcc555",
-        color: isCurrent ? "#fff" : "#000",
+        backgroundColor: isCurrent
+          ? currentTheme.handContainer.currentPlayer
+          : currentTheme.handContainer.others,
+        color: isCurrent
+          ? currentTheme.nameTextColor.currentPlayer
+          : currentTheme.nameTextColor.others,
       }}
     >
-      <h3 style={styles.heading}>{player.name}</h3>
+      <h3
+        style={{
+          ...styles.heading,
+          color: isCurrent
+            ? currentTheme.nameTextColor.currentPlayer
+            : currentTheme.nameTextColor.others,
+        }}
+      >
+        {player.name}
+      </h3>
       <div
         style={{
           ...styles.handContainer,
@@ -71,7 +87,6 @@ const PlayerHand = ({
 const styles = {
   playerContainer: {
     padding: "10px",
-    border: "1px solid #ccc",
     borderRadius: "8px",
     marginBottom: "10px",
   },
@@ -79,12 +94,13 @@ const styles = {
     display: "flex",
     gap: "5px",
     padding: "10px 0",
-    maxWidth: "500px", // Sabit genişlik
+    maxWidth: "475px", // Sabit genişlik
+    height: "100px",
     overflowX: "hidden", // Fazla kartlar gizlenir, kaydırma kullanıcı sırasına göre kontrol edilir
   },
   cardBack: {
     width: "75px",
-    height: "125px",
+    height: "100px",
     backgroundImage: `url('/cardback.png')`,
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
@@ -102,16 +118,15 @@ const styles = {
     borderRadius: "5px",
   },
   heading: {
-    fontSize: '24px',
-    fontWeight: '600',
-    color: 'white',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '1px',
-    textShadow: '1px 1px 3px rgba(0, 0, 0, 0.2)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '5%', // Center vertically if needed
+    fontSize: "24px",
+    fontWeight: "600",
+    textTransform: "uppercase" as const,
+    letterSpacing: "1px",
+    textShadow: "1px 1px 3px rgba(0, 0, 0, 0.2)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "5%", // Center vertically if needed
   },
 };
 

@@ -8,6 +8,14 @@ interface ThemeStyles {
   textColor: string;
   cardBackground: string;
   cardText: string;
+  handContainer: {
+    currentPlayer: string;
+    others: string;
+  };
+  nameTextColor: {
+    currentPlayer: string;
+    others: string;
+  };
 }
 
 interface ThemeContextType {
@@ -16,7 +24,9 @@ interface ThemeContextType {
   themeStyles: Record<Theme, ThemeStyles>;
 }
 
-export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+export const ThemeContext = createContext<ThemeContextType | undefined>(
+  undefined
+);
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
@@ -26,7 +36,9 @@ export const useTheme = () => {
   return context;
 };
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [theme, setTheme] = useState<Theme>("black");
 
   useEffect(() => {
@@ -54,6 +66,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       textColor: "#cdd6f4",
       cardBackground: "rgba(50, 50, 50, 0.9)",
       cardText: "#f0f0f0",
+
+      handContainer: {
+        currentPlayer: "rgba(255, 255, 255, 0.9)",
+        others: "rgba(220, 220, 220, 0.2)",
+      },
+      nameTextColor: {
+        currentPlayer: "#2e2e2e",
+        others: "#555555",
+      },
     },
     white: {
       background:
@@ -61,6 +82,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       textColor: "#2e2e2e",
       cardBackground: "rgba(255, 255, 255, 0.9)",
       cardText: "#555555",
+      handContainer: {
+        currentPlayer: "rgba(50, 50, 50, 0.9)",
+        others: "rgba(70, 70, 70, 0.2)",
+      },
+      nameTextColor: {
+        currentPlayer: "#cdd6f4",
+        others: "#a5a5a5",
+      },
     },
     navy: {
       background:
@@ -68,6 +97,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       textColor: "#e0def4",
       cardBackground: "rgba(37, 39, 77, 0.9)",
       cardText: "#f0f0f0",
+      handContainer: {
+        currentPlayer: "rgba(61, 132, 168, 0.9)",
+        others: "rgba(50, 50, 80, 0.1)",
+      },
+      nameTextColor: {
+        currentPlayer: "#e0def4",
+        others: "#c5c5d8",
+      },
     },
     sunset: {
       background:
@@ -75,6 +112,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       textColor: "#ffffff",
       cardBackground: "rgba(255, 119, 72, 0.9)",
       cardText: "#f5f5f5",
+      handContainer: {
+        currentPlayer: "rgba(255, 198, 42, 0.86)",
+        others: "rgba(255, 140, 100, 0.2)",
+      },
+      nameTextColor: {
+        currentPlayer: "#ffffff",
+        others: "#ffe6e6",
+      },
     },
     forest: {
       background:
@@ -82,6 +127,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       textColor: "#f0fff0",
       cardBackground: "rgba(34, 94, 84, 0.95)",
       cardText: "#d4edda",
+      handContainer: {
+        currentPlayer: "rgba(44, 162, 142, 0.95)",
+        others: "rgba(40, 110, 100, 0.2)",
+      },
+      nameTextColor: {
+        currentPlayer: "#f0fff0",
+        others: "#d4edda",
+      },
     },
     candy: {
       background:
@@ -89,6 +142,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       textColor: "#4b0082",
       cardBackground: "rgba(255, 182, 193, 0.9)",
       cardText: "#800080",
+      handContainer: {
+        currentPlayer: "rgba(255, 102, 158, 0.9)",
+        others: "rgba(255, 200, 210, 0.2)",
+      },
+      nameTextColor: {
+        currentPlayer: "#4b0082",
+        others: "#800080",
+      },
     },
   };
 

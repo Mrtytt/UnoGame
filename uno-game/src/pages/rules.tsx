@@ -1,4 +1,5 @@
 import { useTheme } from "../context/ThemeContext";
+import BackButton from "../utils/BackButton";
 import rules from "../utils/Rules";
 
 const RulesPage = () => {
@@ -12,6 +13,7 @@ const RulesPage = () => {
         color: themeStyles[theme].textColor, // Text color from theme
       }}
     >
+      <BackButton />
       <h1 style={{ ...styles.title, color: themeStyles[theme].textColor }}>
         UNO Game Rules
       </h1>

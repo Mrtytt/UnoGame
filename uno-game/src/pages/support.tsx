@@ -8,6 +8,7 @@ import {
   Button,
 } from "@mui/material";
 import { useTheme } from "../context/ThemeContext";
+import BackButton from "../utils/BackButton";
 
 const SupportScreen: React.FC = () => {
   const { theme, themeStyles } = useTheme(); // Get theme and theme styles
@@ -20,6 +21,7 @@ const SupportScreen: React.FC = () => {
         color: themeStyles[theme].textColor, // Text color from theme
       }}
     >
+      <BackButton></BackButton>
       <Typography variant="h4" sx={styles.header}>
         Support
       </Typography>

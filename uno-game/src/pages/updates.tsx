@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Typography, Box, List, ListItem, ListItemText, CircularProgress } from "@mui/material";
 import { useTheme } from "../context/ThemeContext";
 import axios from "axios";
+import BackButton from "../utils/BackButton";
 
 const UpdatesScreen: React.FC = () => {
   const [updates, setUpdates] = useState<{ version: string; date: string; changes: string[] }[]>([]);
@@ -37,6 +38,7 @@ const UpdatesScreen: React.FC = () => {
         color: themeStyles[theme].textColor,
       }}
     >
+      <BackButton></BackButton>
       <Typography variant="h4" sx={styles.header}>
         Updates
       </Typography>

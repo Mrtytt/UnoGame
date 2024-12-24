@@ -25,11 +25,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <MusicProvider>
-        {" "}
-        {/* Müzik sarmalayıcısı */}
         <ThemeProvider>
-          {" "}
-          {/* Tema sarmalayıcısı */}
           <GameProvider>
             <div>
               {isLoading ? (

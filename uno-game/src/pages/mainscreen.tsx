@@ -3,15 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import AppDrawer from "../utils/AppDrawer";
 import BackButton from "../utils/BackButton";
-import DrawerButton from "../utils/DrawerButton";
 
 const MainScreen: React.FC = () => {
   const navigate = useNavigate();
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const { theme, themeStyles } = useTheme(); // theme ve themeStyles'ı alıyoruz
-
-  // Drawer toggle
 
   return (
     <div

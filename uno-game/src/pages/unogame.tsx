@@ -6,6 +6,7 @@ import ColorPopup from "../utils/ColorPopup";
 import React, { useState, useEffect } from "react";
 import PlayerHand from "../utils/Playerhand";
 import BackButton from "../utils/BackButton";
+import AppDrawer from "../utils/AppDrawer";
 
 const UNOGame: React.FC = () => {
   const {
@@ -85,7 +86,8 @@ const UNOGame: React.FC = () => {
         color: themeStyles[theme].textColor,
       }}
     >
-      <BackButton></BackButton>
+      <BackButton/>
+      <AppDrawer/>
       {/* Üstteki oyuncu */}
       <div style={{ ...styles.playersContainer, top: "10px" }}>
         {players.slice(1, 2).map((player) => (
