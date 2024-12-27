@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useGameContext } from "../context/GameContext";
 import { useTheme } from "../context/ThemeContext";
 import { Player } from "../components/players";
@@ -6,7 +6,7 @@ import { getCardStyles } from "../styles/getCardStyles";
 
 const MAX_VISIBLE_CARDS = 7; // Ekranda görünen maksimum kart sayısı
 
-const PlayerHand = ({
+export const PlayerHand = ({
   player,
   isCurrent,
 }: {
@@ -19,6 +19,36 @@ const PlayerHand = ({
   const visibleCards = player.hand.slice(0, MAX_VISIBLE_CARDS);
   const remainingCardsCount = player.hand.length - MAX_VISIBLE_CARDS;
   const currentTheme = themeStyles[theme];
+
+  const [selectedCard, setSelectedCard] = useState<number | null>(null);
+  const [animationState, setAnimationState] = useState(false);
+
+  const handleCardClick = (cardIndex: number, card: any) => {
+    if (isCurrent) {
+      setSelectedCard(cardIndex);
+      setAnimationState(true);
+
+      setTimeout(() => {
+        playCard(player.id, card); // Kartın oyun mantığını tetikleme
+        setAnimationState(false);
+        setSelectedCard(null);
+      }, 1000); // Animasyon süresi kadar bekle
+    }
+  };
+  const getCardTransform = (position: "top" | "right" | "bottom" | "left") => {
+    switch (position) {
+      case "top":
+        return "translate(-50%, 250%)";
+      case "right":
+        return "translate(-650%, -50%)";
+      case "bottom":
+        return "translate(-50%, -250%)";
+      case "left":
+        return "translate(650%, -50%)";
+      default:
+        return "translate(-50%, -50%)";
+    }
+  };
 
   return (
     <div
@@ -52,12 +82,22 @@ const PlayerHand = ({
         {visibleCards.map((card, index) => (
           <div
             key={index}
-            style={
-              isCurrent
+            style={{
+              ...(isCurrent
                 ? getCardStyles(card.color || "default", card.value)
-                : styles.cardBack
-            }
-            onClick={() => (isCurrent ? playCard(player.id, card) : null)}
+                : styles.cardBack),
+              ...(selectedCard === index && animationState
+                ? {
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: getCardTransform(player.playerPosition), // Oyuncuya göre hareket
+                    transition: "all 1s ease-out",
+                    zIndex: 10, // Kartın üstte olması için
+                  }
+                : {}),
+            }}
+            onClick={() => handleCardClick(index, card)}
           >
             {isCurrent ? card.value : ""}
           </div>
@@ -127,6 +167,14 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     height: "5%", // Center vertically if needed
+  },
+  cardMoving: {
+    position: "absolute" as const,
+    left: "50%", // Ortaya hareket
+    top: "0%",
+    transform: "translate(-50%, -100%) scale(1.2)", // Ortalamak ve büyütmek
+    transition: "all 1s ease-out",
+    zIndex: 10, // Kartın üstte olması için
   },
 };
 

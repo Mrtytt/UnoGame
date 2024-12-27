@@ -1,5 +1,5 @@
-import { createDeck} from "../components/cards";
-import { createPlayers} from "../components/players";
+import { createDeck } from "../components/cards";
+import { createPlayers } from "../components/players";
 import { useGameContext } from "../context/GameContext";
 import { useTheme } from "../context/ThemeContext";
 import ColorPopup from "../utils/ColorPopup";
@@ -32,12 +32,29 @@ const UNOGame: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<string>("");
   const { theme, themeStyles } = useTheme();
   const [gameStarted, setGameStarted] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [previousCard, setPreviousCard] = useState(currentCard);
 
   useEffect(() => {
     if (!gameStarted) {
       startGame();
     }
   }, [gameStarted]);
+  useEffect(() => {
+    if (currentCard) {
+      setIsAnimating(true);
+
+      // Bir önceki kartı sakla (animasyon için)
+      setPreviousCard(currentCard);
+
+      // Animasyonu bitirmek için timeout
+      const timeout = setTimeout(() => {
+        setIsAnimating(false);
+      }, 500); // Animasyon süresine uygun olmalı
+
+      return () => clearTimeout(timeout);
+    }
+  }, [currentCard]);
 
   const startGame = async () => {
     const newDeck = createDeck();
@@ -86,8 +103,8 @@ const UNOGame: React.FC = () => {
         color: themeStyles[theme].textColor,
       }}
     >
-      <BackButton/>
-      <AppDrawer/>
+      <BackButton />
+      <AppDrawer />
       {/* Üstteki oyuncu */}
       <div style={{ ...styles.playersContainer, top: "10px" }}>
         {players.slice(1, 2).map((player) => (
@@ -143,20 +160,37 @@ const UNOGame: React.FC = () => {
       </div>
 
       {/* Geçerli kart ve Çekme kartı */}
-      {gameStarted && currentCard && !gameOver &&(
+      {gameStarted && currentCard && !gameOver && (
         <div style={styles.cardContainer}>
           <h2>Current Card</h2>
           <div
             style={{
               ...styles.card,
-              backgroundColor: currentCard.color || "transparent",
-              color: currentCard.color === "yellow" ? "black" : "white",
+              ...styles.cardAnimation,
+              ...(isAnimating && styles.cardAnimating),
+              backgroundColor: previousCard?.color || "transparent",
+              color: previousCard?.color === "yellow" ? "black" : "white",
             }}
           >
-            {currentCard.value}
+            {previousCard?.value}
           </div>
+          {!isAnimating && currentCard && (
+            <div
+              style={{
+                ...styles.card,
+                backgroundColor: currentCard.color || "transparent",
+                color: currentCard.color === "yellow" ? "black" : "white",
+              }}
+            >
+              {currentCard.value}
+            </div>
+          )}
           <button
-            style={styles.drawCardButton}
+            style={{
+              ...styles.drawCardButton,
+              background: themeStyles[theme].drawButtonColor,
+              color: themeStyles[theme].textColor,
+            }}
             onClick={() => drawCard(currentPlayerIndex)}
             disabled={gameOver}
           >
@@ -168,7 +202,14 @@ const UNOGame: React.FC = () => {
       {/* Oyun bitişi */}
       {gameOver && (
         <div style={styles.cardContainer}>
-          <button style={styles.drawCardButton} onClick={startGame}>
+          <button
+            style={{
+              ...styles.drawCardButton,
+              background: themeStyles[theme].drawButtonColor,
+              color: themeStyles[theme].textColor,
+            }}
+            onClick={startGame}
+          >
             Restart Game
           </button>
         </div>
@@ -221,12 +262,14 @@ const styles = {
   },
   cardContainer: {
     position: "absolute" as const,
+    flexDirection: "column" as const,
+    justifyContent: "center",
+    alignItems: "center",
+    display: "flex",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     textAlign: "center" as const,
-    alignItems:"center",
-    justifyContent:"center",
   },
   card: {
     height: "75px",
@@ -237,14 +280,14 @@ const styles = {
     alignItems: "center",
     fontSize: "20px",
     color: "#fff",
-    marginLeft:"25%"
+    position: "absolute" as const,
+    transition: "opacity 0.5s ease, transform 0.5s ease",
+    marginTop: "20px",
   },
   drawCardButton: {
-    marginTop: "10px",
+    marginTop: "70px",
     padding: "10px 20px",
     fontSize: "16px",
-    background: "#4caf50",
-    color: "#fff",
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
@@ -264,6 +307,14 @@ const styles = {
     right: "20px",
     top: "60%",
     transform: "translateY(-50%)",
+  },
+  cardAnimation: {
+    opacity: 1,
+    transform: "scale(1)",
+  },
+  cardAnimating: {
+    opacity: 0,
+    transform: "scale(0.5)",
   },
 };
 

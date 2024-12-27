@@ -37,27 +37,27 @@ const TrainAgent: React.FC = () => {
   };
 
   // Ajanı başlat ve oyuna hazırla
-  useEffect(() => {
-    const initializeAgent = async () => {
-      // Oyuncular ve deste hazırla
-      const shuffledDeck = shuffleDeck([...deck],playedCards);
-      const initializedPlayers = [
-        { id: 1, name: "Agent", hand: [], isBot: true },
-        { id: 2, name: "Opponent", hand: [], isBot: true },
-      ];
+  // useEffect(() => {
+  //   const initializeAgent = async () => {
+  //     // Oyuncular ve deste hazırla
+  //     const shuffledDeck = shuffleDeck([...deck],playedCards);
+  //     const initializedPlayers = [
+  //       { id: 1, name: "Agent", hand: [], isBot: true },
+  //       { id: 2, name: "Opponent", hand: [], isBot: true },
+  //     ];
 
-      const { deck: newDeck, players: newPlayers } = await dealCardsOneByOne(
-        shuffledDeck,
-        initializedPlayers
-      );
+  //     const { deck: newDeck, players: newPlayers } = await dealCardsOneByOne(
+  //       shuffledDeck,
+  //       initializedPlayers
+  //     );
 
-      setDeck(newDeck);
-      setPlayers(newPlayers);
-      setAgent(newPlayers[0]);
-    };
+  //     setDeck(newDeck);
+  //     setPlayers(newPlayers);
+  //     setAgent(newPlayers[0]);
+  //   };
 
-    initializeAgent();
-  }, [deck, dealCardsOneByOne, setDeck, setPlayers, shuffleDeck]);
+  //   initializeAgent();
+  // }, [deck, dealCardsOneByOne, setDeck, setPlayers, shuffleDeck]);
 
   // Eğitim döngüsü
   const trainAgent = () => {

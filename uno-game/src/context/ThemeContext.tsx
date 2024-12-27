@@ -16,6 +16,7 @@ interface ThemeStyles {
     currentPlayer: string;
     others: string;
   };
+  drawButtonColor:string;
 }
 
 interface ThemeContextType {
@@ -66,7 +67,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
       textColor: "#cdd6f4",
       cardBackground: "rgba(50, 50, 50, 0.9)",
       cardText: "#f0f0f0",
-
       handContainer: {
         currentPlayer: "rgba(255, 255, 255, 0.9)",
         others: "rgba(220, 220, 220, 0.2)",
@@ -75,6 +75,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
         currentPlayer: "#2e2e2e",
         others: "#555555",
       },
+      drawButtonColor: "rgba(73, 76, 69, 0.9)"
     },
     white: {
       background:
@@ -90,6 +91,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
         currentPlayer: "#cdd6f4",
         others: "#a5a5a5",
       },
+      drawButtonColor:"rgba(66, 66, 66, 0.9)"
     },
     navy: {
       background:
@@ -105,6 +107,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
         currentPlayer: "#e0def4",
         others: "#c5c5d8",
       },
+      drawButtonColor:"rgba(41, 40, 40, 0.9)"
     },
     sunset: {
       background:
@@ -120,6 +123,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
         currentPlayer: "#ffffff",
         others: "#ffe6e6",
       },
+      drawButtonColor:"rgba(50, 50, 50, 0.9)"
     },
     forest: {
       background:
@@ -135,6 +139,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
         currentPlayer: "#f0fff0",
         others: "#d4edda",
       },
+      drawButtonColor:"rgba(50, 50, 50, 0.9)"
     },
     candy: {
       background:
@@ -150,6 +155,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
         currentPlayer: "#4b0082",
         others: "#800080",
       },
+      drawButtonColor:"rgba(243, 126, 247, 0.9)"
     },
   };
 

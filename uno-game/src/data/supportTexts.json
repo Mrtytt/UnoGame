@@ -1,0 +1,24 @@
+{
+    "header": "Support",
+    "faqSection": {
+      "title": "Frequently Asked Questions",
+      "questions": [
+        {
+          "primary": "How to play Uno?",
+          "secondary": "For a detailed guide, check the rules section."
+        },
+        {
+          "primary": "How to report a bug?",
+          "secondary": "You can reach out to the support team."
+        }
+      ]
+    },
+    "contactSection": {
+      "title": "Contact",
+      "email": "E-Mail: support@uno.com",
+      "phone": "Phone: +90 555 123 45 67"
+    },
+    "buttonText": "Contact Us",
+    "buttonAlert": "Redirecting to issue reporting screen..."
+  }
+  

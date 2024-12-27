@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Box, List, ListItem, ListItemText, CircularProgress } from "@mui/material";
+import {
+  Typography,
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  CircularProgress,
+} from "@mui/material";
 import { useTheme } from "../context/ThemeContext";
 import axios from "axios";
+import semver from "semver";
 import BackButton from "../utils/BackButton";
 
+// Update type definition
+type Update = {
+  version: string;
+  date: string;
+  changes: string[];
+};
+
 const UpdatesScreen: React.FC = () => {
-  const [updates, setUpdates] = useState<{ version: string; date: string; changes: string[] }[]>([]);
+  const [updates, setUpdates] = useState<Update[]>([]);
   const [loading, setLoading] = useState(true);
   const { theme, themeStyles } = useTheme();
 
@@ -15,12 +30,16 @@ const UpdatesScreen: React.FC = () => {
         const response = await axios.get(
           "https://api.github.com/repos/Mrtytt/UnoGame/releases"
         );
-        const fetchedUpdates = response.data.map((release: any) => ({
+        const fetchedUpdates: Update[] = response.data.map((release: any) => ({
           version: release.tag_name,
           date: new Date(release.published_at).toLocaleDateString(),
           changes: release.body.split("\n").filter((line: string) => line.trim() !== ""),
         }));
-        setUpdates(fetchedUpdates);
+        // Sort updates by version
+        const sortedUpdates = fetchedUpdates.sort((a: Update, b: Update) =>
+          semver.compare(b.version, a.version) // Descending order
+        );
+        setUpdates(sortedUpdates);
       } catch (error) {
         console.error("Error fetching updates:", error);
       } finally {
@@ -38,7 +57,7 @@ const UpdatesScreen: React.FC = () => {
         color: themeStyles[theme].textColor,
       }}
     >
-      <BackButton></BackButton>
+      <BackButton />
       <Typography variant="h4" sx={styles.header}>
         Updates
       </Typography>
@@ -47,7 +66,13 @@ const UpdatesScreen: React.FC = () => {
       ) : (
         <List sx={styles.list}>
           {updates.map((update, index) => (
-            <Box key={index} sx={styles.updateCard}>
+            <Box
+              key={index}
+              sx={{
+                ...styles.updateCard,
+                background: themeStyles[theme].background,
+              }}
+            >
               <Typography variant="h6" sx={styles.version}>
                 Version: {update.version}
               </Typography>

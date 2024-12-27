@@ -9,58 +9,55 @@ import {
 } from "@mui/material";
 import { useTheme } from "../context/ThemeContext";
 import BackButton from "../utils/BackButton";
+import supportTexts from "../data/supportTexts.json"; // JSON dosyasını içe aktar
 
 const SupportScreen: React.FC = () => {
-  const { theme, themeStyles } = useTheme(); // Get theme and theme styles
+  const { theme, themeStyles } = useTheme(); // Tema bilgilerini alın
 
   return (
     <Box
       style={{
         ...styles.container,
-        background: themeStyles[theme].background, // Background from theme
-        color: themeStyles[theme].textColor, // Text color from theme
+        background: themeStyles[theme].background,
+        color: themeStyles[theme].textColor,
       }}
     >
-      <BackButton></BackButton>
-      <Typography variant="h4" sx={styles.header}>
-        Support
+      <BackButton />
+      <Typography variant="h4" sx={{...styles.header,color: themeStyles[theme].textColor}}>
+        {supportTexts.header}
       </Typography>
       <Box sx={styles.section}>
         <Typography variant="h6" sx={styles.subHeader}>
-          Frequently Asked Questions
+          {supportTexts.faqSection.title}
         </Typography>
         <List>
-          <ListItem sx={styles.listItem}>
-            <ListItemText
-              primary="How to play Uno?"
-              secondary="For a detailed guide, check the rules section."
-            />
-          </ListItem>
-          <ListItem sx={styles.listItem}>
-            <ListItemText
-              primary="How to report a bug?"
-              secondary="You can reach out to the support team."
-            />
-          </ListItem>
+          {supportTexts.faqSection.questions.map((question, index) => (
+            <ListItem key={index} sx={styles.listItem}>
+              <ListItemText
+                primary={question.primary}
+                secondary={question.secondary}
+              />
+            </ListItem>
+          ))}
         </List>
       </Box>
       <Box sx={styles.section}>
         <Typography variant="h6" sx={styles.subHeader}>
-          Contact
+          {supportTexts.contactSection.title}
         </Typography>
         <Typography sx={styles.contactInfo}>
-          E-Mail: support@uno.com
+          {supportTexts.contactSection.email}
         </Typography>
         <Typography sx={styles.contactInfo}>
-          Phone: +90 555 123 45 67
+          {supportTexts.contactSection.phone}
         </Typography>
       </Box>
       <Button
         sx={styles.reportButton}
         variant="contained"
-        onClick={() => alert("Redirecting to issue reporting screen...")}
+        onClick={() => alert(supportTexts.buttonAlert)}
       >
-        Contact Us
+        {supportTexts.buttonText}
       </Button>
     </Box>
   );
@@ -77,10 +74,9 @@ const styles = {
     justifyContent: "center",
     fontFamily: "Arial, sans-serif",
     backgroundSize: "cover",
-    backgroundBlendMode: "overlay" as const, // Background color transition effect
+    backgroundBlendMode: "overlay" as const,
   },
   header: {
-    color: "#007bff",
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: "20px",
@@ -92,7 +88,7 @@ const styles = {
     borderRadius: "8px",
     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
     width: "60%",
-    maxWidth: "600px", // Ensures responsiveness
+    maxWidth: "600px",
   },
   subHeader: {
     fontWeight: "bold",
@@ -102,7 +98,7 @@ const styles = {
   listItem: {
     padding: "10px 0",
     color: "#555",
-    borderBottom: "1px solid #f1f1f1", // Adds separation between items
+    borderBottom: "1px solid #f1f1f1",
   },
   contactInfo: {
     margin: "8px 0",

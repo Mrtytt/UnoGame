@@ -31,6 +31,8 @@ const MainScreen: React.FC = () => {
         <button
           style={{
             ...styles.button,
+            color: themeStyles[theme].nameTextColor.currentPlayer,
+            backgroundColor: themeStyles[theme].handContainer.currentPlayer, // Temadan gelen buton yazı rengi
           }}
           onClick={() => navigate("unogame")} // UNOGame rotasına yönlendirme
         >
@@ -39,6 +41,8 @@ const MainScreen: React.FC = () => {
         <button
           style={{
             ...styles.button,
+            color: themeStyles[theme].nameTextColor.currentPlayer, // Temadan gelen buton yazı rengi
+            backgroundColor: themeStyles[theme].handContainer.currentPlayer, // Temadan gelen buton yazı rengi
           }}
         >
           Exit
@@ -52,7 +56,7 @@ const styles = {
   container: {
     padding: "20px",
     textAlign: "center" as const,
-    minHeight: "100vh",
+    minHeight: "94vh",
     display: "flex",
     flexDirection: "column" as const,
     alignItems: "center",

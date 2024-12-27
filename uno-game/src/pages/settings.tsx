@@ -41,12 +41,12 @@ const Settings: React.FC = () => {
     >
       <BackButton></BackButton>
       <div style={styles.settings}>
-        <h2 style={styles.title}>Settings</h2>
+        <h2 style={{...styles.title,color:themeStyles[theme].textColor}}>Settings</h2>
 
         {/* Theme Settings Section */}
         <div style={styles.section}>
           <div style={styles.sectionHeader}>
-            <h3 style={styles.sectionTitle}>Theme Settings</h3>
+            <h3 style={{...styles.sectionTitle,color:themeStyles[theme].textColor}}>Theme Settings</h3>
             <button
               style={styles.toggleButton}
               onClick={() => toggleSection("theme")}
@@ -125,7 +125,7 @@ const Settings: React.FC = () => {
         {/* Music Settings Section */}
         <div style={styles.section}>
           <div style={styles.sectionHeader}>
-            <h3 style={styles.sectionTitle}>Music Settings</h3>
+            <h3 style={{...styles.sectionTitle,color:themeStyles[theme].textColor}}>Music Settings</h3>
             <button
               style={styles.toggleButton}
               onClick={() => toggleSection("music")}
@@ -146,7 +146,7 @@ const Settings: React.FC = () => {
         {/* Volume Settings Section */}
         <div style={styles.section}>
           <div style={styles.sectionHeader}>
-            <h3 style={styles.sectionTitle}>Volume Settings</h3>
+            <h3 style={{...styles.sectionTitle,color:themeStyles[theme].textColor}}>Volume Settings</h3>
             <button
               style={styles.toggleButton}
               onClick={() => toggleSection("volume")}

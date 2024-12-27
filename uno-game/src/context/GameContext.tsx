@@ -113,69 +113,153 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     currentPlayerId: number,
     numCards: number
   ) => {
-    // Mevcut oyuncuyu bul
-    const currentPlayerIndex = players.findIndex(
-      (p) => p.id === currentPlayerId
-    );
+    const currentPlayerIndex = players.findIndex((p) => p.id === currentPlayerId);
     if (currentPlayerIndex === -1) return;
-
-    // Bir sonraki oyuncuyu belirle
+  
     const nextPlayerIndex = isClockwise
       ? (currentPlayerIndex + 1) % players.length
       : (currentPlayerIndex - 1 + players.length) % players.length;
-
+  
     const nextPlayer = players[nextPlayerIndex];
     if (!nextPlayer) return;
-
+  
+    // Çekilecek kartları belirle
+    const cardsToDraw = deck.slice(0, numCards);
+    let updatedDeck = deck.slice(numCards);
+  
+    // Mevcut oyuncunun elini güncelle
     const updatedCurrentPlayer = {
       ...players[currentPlayerIndex],
       hand: players[currentPlayerIndex].hand.filter(
         (card) => card.id !== currentCard.id // currentCard.id ile eşleşmeyen kartları elinde tut
       ),
     };
-    // Çekilecek kartları belirle
-    const cardsToDraw = deck.slice(0, numCards);
-    const updatedDeck = deck.slice(numCards);
-
-    // Bir sonraki oyuncunun elini güncelle
-    const updatedNextPlayer = {
-      ...nextPlayer,
-      hand: [...nextPlayer.hand, ...cardsToDraw],
-    };
-
-    // Oyuncu listesini güncelle
-    const updatedPlayers = players.map((p, index) => {
-      if (index === currentPlayerIndex) return updatedCurrentPlayer;
-      if (index === nextPlayerIndex) return updatedNextPlayer;
-      return p;
-    });
-
-    for (let i = 0; i < numCards; i++) {
-      const drawnCard = deck.shift();
-      if (drawnCard) {
-        nextPlayer.hand.push(drawnCard);
-      }
-    }
-    // Güncellenmiş oyuncuları ve desteyi ayarla
-    setPlayers(updatedPlayers);
-    setDeck(updatedDeck);
-
+  
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((p, index) =>
+        index === currentPlayerIndex ? updatedCurrentPlayer : p
+      )
+    );
+  
+    setDeck(updatedDeck); // Desteyi güncelle
+  
     // Eğer destede yeterince kart kalmadıysa, desteyi yeniden karıştır
     if (updatedDeck.length < numCards) {
       const reshuffledDeck = shuffleDeck(updatedDeck, playedCards);
+      updatedDeck = reshuffledDeck;
       setDeck(reshuffledDeck);
     }
+  
+    // Animasyon fonksiyonu
+    const animateCardToPlayer = (card: Card, delay: number) => {
+      const animationElement = document.createElement("div");
+      animationElement.className = "card-animation";
+      addCSS();
+  
+      const startPosition = "translate(1050%, -450%)";
+      animationElement.style.transform = startPosition;
+      animationElement.style.transition = `transform 1.0s ease ${delay}ms`;
+  
+      document.body.appendChild(animationElement);
+  
+      setTimeout(() => {
+        const transform = getCardTransform(nextPlayer.playerPosition);
+        animationElement.style.transform = transform;
+  
+        setTimeout(() => {
+          // Animasyon tamamlandıktan sonra bir sonraki oyuncuyu güncelle
+          const drawnCard = updatedDeck.shift();
+          if (drawnCard) {
+            setPlayers((prevPlayers) =>
+              prevPlayers.map((p, index) =>
+                index === nextPlayerIndex
+                  ? { ...p, hand: [...p.hand, drawnCard] }
+                  : p
+              )
+            );
+            setDeck(updatedDeck); // Güncellenmiş desteyi tekrar kaydet
+          }
+  
+          document.body.removeChild(animationElement); // DOM'daki animasyon elementini kaldır
+        }, 1000); // Animasyon süresi
+      }, 10);
+    };
+  
+    // Her kart için animasyonu başlat
+    cardsToDraw.forEach((card, index) => {
+      animateCardToPlayer(card, index * 200); // Her kart için 200ms gecikme
+    });
   };
+  
+  
+
+  const addCSS = () => {
+    const style = document.createElement("style");
+    style.innerHTML = `
+      .card-animation {
+        position: absolute; /* Sayfa üzerinde serbest hareket etmesi için */
+        width: 75px; /* Kartın boyutunu belirleyin */
+        height: 100px; /* Kartın boyutunu belirleyin */
+        background-image: url('/cardback.png');,
+        background-size: contain; /* Resmi kartın boyutlarına uyacak şekilde ölçeklendir */
+        background-repeat: no-repeat; /* Resmin tekrar etmesini engelle */
+        display: flex;
+        background-size: 100% 100%;
+        transition: transform 2.0s ease; /* Animasyon geçişi */
+      }
+    `;
+    document.head.appendChild(style);
+  };
+  // CSS'i eklemek için fonksiyonu çağırın
 
   const drawCard = (playerId: number) => {
     const player = players.find((p) => p.id === playerId + 1);
     if (!player || gameOver) return;
 
     const drawnCard = deck.shift();
-    if (drawnCard) {
-      player.hand.push(drawnCard); // Kartı oyuncunun eline ekle
-      setDeck([...deck]); // Yeni desteyi güncelle
-      setPlayers([...players]); // Oyuncuları güncelle
+    if (!drawnCard) return;
+
+    // Kartın geçici animasyon stilini ayarla
+    const animationElement = document.createElement("div");
+    animationElement.className = "card-animation";
+    addCSS();
+
+    // Animasyonun başlangıç pozisyonunu destedeki kartın pozisyonu olarak ayarla
+    const startPosition = "translate(1050%, -450%)"; // Başlangıç pozisyonu (kart destede, ortada)
+    animationElement.style.transform = startPosition;
+    animationElement.style.transition = "transform 1.0s ease";
+
+    document.body.appendChild(animationElement);
+
+    // Animasyonu ters yönde, oyuncunun pozisyonuna doğru başlat
+    setTimeout(() => {
+      const transform = getCardTransform(player.playerPosition); // Animasyonun hedefi oyuncunun pozisyonu
+      animationElement.style.transform = transform;
+
+      // Animasyon tamamlandıktan sonra kartı oyuncunun eline ekle
+      setTimeout(() => {
+        player.hand.push(drawnCard); // Kartı oyuncunun eline ekle
+        setDeck([...deck]); // Yeni desteyi güncelle
+        setPlayers([...players]); // Oyuncuları güncelle
+
+        // Animasyon elementini kaldır
+        document.body.removeChild(animationElement);
+      }, 1000); // Animasyon süresi (0.5s)
+    }, 10); // Başlangıç animasyonu için küçük bir gecikme (DOM'un elementi eklemesini beklemek için)
+  };
+
+  const getCardTransform = (position: "top" | "right" | "bottom" | "left") => {
+    switch (position) {
+      case "top":
+        return "translate(1050%, -675%)"; // Yukarıya doğru
+      case "right":
+        return "translate(2100%, -450%)"; // Sağa doğru
+      case "bottom":
+        return "translate(1050%, 100%)"; // Aşağıya doğru
+      case "left":
+        return "translate(0%, -450%) "; // Sola doğru
+      default:
+        return "translate(-50%, -50%)";
     }
   };
 
@@ -208,6 +292,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
   const handleCardPlay = (playerId: number, card: Card) => {
     const player = players.find((p) => p.id === playerId);
     if (!player) return;
+    playedCards.push(card);
 
     // 2. Özel kartlar için işlem yap
     if (card.value === "+4") {
