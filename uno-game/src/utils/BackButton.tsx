@@ -8,7 +8,7 @@ const BackButton: React.FC = () => {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
-    navigate(-1); // Navigate one page backward
+    navigate("/"); // Navigate one page backward
   };
   const { themeStyles, theme } = useTheme();
 

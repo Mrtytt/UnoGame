@@ -100,7 +100,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
       cardBackground: "rgba(37, 39, 77, 0.9)",
       cardText: "#f0f0f0",
       handContainer: {
-        currentPlayer: "rgba(61, 132, 168, 0.9)",
+        currentPlayer: "rgba(134, 77, 181, 0.9)",
         others: "rgba(50, 50, 80, 0.1)",
       },
       nameTextColor: {
@@ -116,7 +116,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
       cardBackground: "rgba(255, 119, 72, 0.9)",
       cardText: "#f5f5f5",
       handContainer: {
-        currentPlayer: "rgba(255, 198, 42, 0.86)",
+        currentPlayer: "rgba(213, 181, 126, 0.84)",
         others: "rgba(255, 140, 100, 0.2)",
       },
       nameTextColor: {

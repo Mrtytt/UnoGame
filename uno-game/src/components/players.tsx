@@ -6,13 +6,14 @@ export type Player = {
   hand: Card[];
   playerPosition: "top" | "right" | "bottom" | "left"; // Oyuncunun masa üzerindeki konumu
   isBot: boolean; // Yeni özellik
+  calledUno: boolean; // Oyuncunun UNO deyip demediğini takip etmek için
 };
 
 export const createPlayers = (numBots: number): Player[] => {
   const positions = ["left", "top", "right", "bottom"] as const;
 
   const players: Player[] = [
-    { id: 1, name: "Human", hand: [], playerPosition: "left", isBot: false }, // İnsan oyuncu
+    { id: 1, name: "Human", hand: [], playerPosition: "left", isBot: false ,calledUno:false}, // İnsan oyuncu
   ];
 
   for (let i = 0; i < numBots; i++) {
@@ -22,6 +23,7 @@ export const createPlayers = (numBots: number): Player[] => {
       hand: [],
       playerPosition: positions[i + 1], // Pozisyonları sırayla ata
       isBot: true,
+      calledUno:false
     });
   }
 

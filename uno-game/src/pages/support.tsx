@@ -67,7 +67,8 @@ const styles = {
   container: {
     padding: "20px",
     textAlign: "center" as const,
-    minHeight: "100vh",
+    minHeight: "100%", // veya herhangi bir yüzdesel değer
+    height: "94vh",
     display: "flex",
     flexDirection: "column" as const,
     alignItems: "center",

@@ -40,13 +40,13 @@ const Settings: React.FC = () => {
       }}
     >
       <BackButton></BackButton>
-      <div style={styles.settings}>
-        <h2 style={{...styles.title,color:themeStyles[theme].textColor}}>Settings</h2>
+      <div style={{...styles.settings,backgroundColor:themeStyles[theme].handContainer.currentPlayer}}>
+        <h2 style={{...styles.title,color:themeStyles[theme].nameTextColor.currentPlayer}}>Settings</h2>
 
         {/* Theme Settings Section */}
         <div style={styles.section}>
           <div style={styles.sectionHeader}>
-            <h3 style={{...styles.sectionTitle,color:themeStyles[theme].textColor}}>Theme Settings</h3>
+            <h3 style={{...styles.sectionTitle,color:themeStyles[theme].nameTextColor.currentPlayer}}>Theme Settings</h3>
             <button
               style={styles.toggleButton}
               onClick={() => toggleSection("theme")}
@@ -125,7 +125,7 @@ const Settings: React.FC = () => {
         {/* Music Settings Section */}
         <div style={styles.section}>
           <div style={styles.sectionHeader}>
-            <h3 style={{...styles.sectionTitle,color:themeStyles[theme].textColor}}>Music Settings</h3>
+            <h3 style={{...styles.sectionTitle,color:themeStyles[theme].nameTextColor.currentPlayer}}>Music Settings</h3>
             <button
               style={styles.toggleButton}
               onClick={() => toggleSection("music")}
@@ -146,7 +146,7 @@ const Settings: React.FC = () => {
         {/* Volume Settings Section */}
         <div style={styles.section}>
           <div style={styles.sectionHeader}>
-            <h3 style={{...styles.sectionTitle,color:themeStyles[theme].textColor}}>Volume Settings</h3>
+            <h3 style={{...styles.sectionTitle,color:themeStyles[theme].nameTextColor.currentPlayer}}>Volume Settings</h3>
             <button
               style={styles.toggleButton}
               onClick={() => toggleSection("volume")}
@@ -180,7 +180,8 @@ const styles = {
   container: {
     padding: "20px",
     textAlign: "center" as const,
-    minHeight: "100vh",
+    minHeight: "100%", // veya herhangi bir yüzdesel değer
+    height: "94vh", // Ekran boyutlarına göre tam yüksekliği kapsar
     display: "flex",
     flexDirection: "column" as const,
     alignItems: "center",

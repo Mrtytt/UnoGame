@@ -6,6 +6,7 @@ import RulesPage from "./pages/rules";
 import UpdatesScreen from "./pages/updates";
 import SupportScreen from "./pages/support";
 import Settings from "./pages/settings";
+import NotFound from "./pages/404NotFound"; // NotFound bileşenini ekliyoruz
 import { MusicProvider } from "./context/MusicContext";
 import { ThemeProvider } from "./context/ThemeContext"; // Yeni ThemeProvider'ı ekliyoruz
 import UNOGame from "./pages/unogame";
@@ -38,6 +39,7 @@ const App: React.FC = () => {
                   <Route path="/support" element={<SupportScreen />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/unogame" element={<UNOGame />} />
+                  <Route path="*" element={<NotFound />} /> {/* 404 sayfası */}
                 </Routes>
               )}
             </div>

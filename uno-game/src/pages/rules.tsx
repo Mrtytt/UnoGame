@@ -1,6 +1,6 @@
 import { useTheme } from "../context/ThemeContext";
 import BackButton from "../utils/BackButton";
-import rules from "../utils/Rules";
+import rulesData from "../data/rules.json"; // JSON dosyasını içeri aktarıyoruz
 
 const RulesPage = () => {
   const { theme, themeStyles } = useTheme(); // Get theme and themeStyles
@@ -24,7 +24,7 @@ const RulesPage = () => {
           color: themeStyles[theme].cardText, // Card text color from theme
         }}
       >
-        {rules.map((rule, index) => (
+        {rulesData.rules.map((rule, index) => ( // JSON'den gelen veriyi kullanıyoruz
           <li key={index}>{rule}</li>
         ))}
       </ul>

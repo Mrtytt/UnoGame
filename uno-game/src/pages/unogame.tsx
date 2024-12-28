@@ -1,4 +1,4 @@
-import { createDeck } from "../components/cards";
+import { Card, createDeck } from "../components/cards";
 import { createPlayers } from "../components/players";
 import { useGameContext } from "../context/GameContext";
 import { useTheme } from "../context/ThemeContext";
@@ -7,6 +7,9 @@ import React, { useState, useEffect } from "react";
 import PlayerHand from "../utils/Playerhand";
 import BackButton from "../utils/BackButton";
 import AppDrawer from "../utils/AppDrawer";
+import { GameOverUI } from "../utils/GameOverUI";
+import CardDisplay from "../utils/CardDisplay";
+import UnoButton from "../utils/UnoButton";
 
 const UNOGame: React.FC = () => {
   const {
@@ -23,6 +26,7 @@ const UNOGame: React.FC = () => {
     shuffleDeck,
     dealCardsOneByOne,
     drawCard,
+    drawCardsForNextPlayer,
     setShowColorPopup,
     showColorPopup,
     playedCards,
@@ -34,6 +38,7 @@ const UNOGame: React.FC = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [previousCard, setPreviousCard] = useState(currentCard);
+  const isAnyHandSizeThree = players.some((player) => player.hand.length === 3);
 
   useEffect(() => {
     if (!gameStarted) {
@@ -95,6 +100,7 @@ const UNOGame: React.FC = () => {
       color,
     }));
   };
+
   return (
     <div
       style={{
@@ -159,61 +165,29 @@ const UNOGame: React.FC = () => {
         ))}
       </div>
 
-      {/* Geçerli kart ve Çekme kartı */}
-      {gameStarted && currentCard && !gameOver && (
-        <div style={styles.cardContainer}>
-          <h2>Current Card</h2>
-          <div
-            style={{
-              ...styles.card,
-              ...styles.cardAnimation,
-              ...(isAnimating && styles.cardAnimating),
-              backgroundColor: previousCard?.color || "transparent",
-              color: previousCard?.color === "yellow" ? "black" : "white",
-            }}
-          >
-            {previousCard?.value}
-          </div>
-          {!isAnimating && currentCard && (
-            <div
-              style={{
-                ...styles.card,
-                backgroundColor: currentCard.color || "transparent",
-                color: currentCard.color === "yellow" ? "black" : "white",
-              }}
-            >
-              {currentCard.value}
-            </div>
-          )}
-          <button
-            style={{
-              ...styles.drawCardButton,
-              background: themeStyles[theme].drawButtonColor,
-              color: themeStyles[theme].textColor,
-            }}
-            onClick={() => drawCard(currentPlayerIndex)}
-            disabled={gameOver}
-          >
-            Draw Card
-          </button>
-        </div>
-      )}
-
-      {/* Oyun bitişi */}
       {gameOver && (
-        <div style={styles.cardContainer}>
-          <button
-            style={{
-              ...styles.drawCardButton,
-              background: themeStyles[theme].drawButtonColor,
-              color: themeStyles[theme].textColor,
-            }}
-            onClick={startGame}
-          >
-            Restart Game
-          </button>
-        </div>
+        <GameOverUI
+          players={players}
+          playerId={(currentPlayerIndex - 1) % players.length}
+          startGame={startGame}
+          theme={theme}
+          themeStyles={themeStyles}
+        />
       )}
+      <CardDisplay
+        gameStarted={gameStarted}
+        currentCard={currentCard}
+        previousCard={previousCard}
+        isAnimating={isAnimating}
+        gameOver={gameOver}
+        drawCard={drawCard}
+        currentPlayerIndex={currentPlayerIndex}
+        themeStyles={themeStyles}
+        theme={theme}
+      />
+      <UnoButton
+        gameOver={gameOver}
+      />
 
       {/* Renk değiştirme pop-up */}
       {showColorPopup && (
@@ -259,62 +233,6 @@ const styles = {
     display: "flex",
     flexDirection: "row" as const,
     gap: "10px",
-  },
-  cardContainer: {
-    position: "absolute" as const,
-    flexDirection: "column" as const,
-    justifyContent: "center",
-    alignItems: "center",
-    display: "flex",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    textAlign: "center" as const,
-  },
-  card: {
-    height: "75px",
-    width: "75px",
-    borderRadius: "10px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    fontSize: "20px",
-    color: "#fff",
-    position: "absolute" as const,
-    transition: "opacity 0.5s ease, transform 0.5s ease",
-    marginTop: "20px",
-  },
-  drawCardButton: {
-    marginTop: "70px",
-    padding: "10px 20px",
-    fontSize: "16px",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-  startButton: {
-    padding: "15px 30px",
-    fontSize: "18px",
-    background: "#3498db",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    marginTop: "20px",
-  },
-  gameOverContainer: {
-    position: "absolute" as const,
-    right: "20px",
-    top: "60%",
-    transform: "translateY(-50%)",
-  },
-  cardAnimation: {
-    opacity: 1,
-    transform: "scale(1)",
-  },
-  cardAnimating: {
-    opacity: 0,
-    transform: "scale(0.5)",
   },
 };
 
