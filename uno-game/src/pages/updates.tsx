@@ -11,6 +11,7 @@ import { useTheme } from "../context/ThemeContext";
 import axios from "axios";
 import semver from "semver";
 import BackButton from "../utils/BackButton";
+import AppDrawer from "../utils/AppDrawer";
 
 // Update type definition
 type Update = {
@@ -58,6 +59,7 @@ const UpdatesScreen: React.FC = () => {
       }}
     >
       <BackButton />
+      <AppDrawer />
       <Typography variant="h4" sx={styles.header}>
         Updates
       </Typography>

@@ -38,7 +38,6 @@ const UNOGame: React.FC = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [previousCard, setPreviousCard] = useState(currentCard);
-  const isAnyHandSizeThree = players.some((player) => player.hand.length === 3);
 
   useEffect(() => {
     if (!gameStarted) {
@@ -167,7 +166,6 @@ const UNOGame: React.FC = () => {
 
       {gameOver && (
         <GameOverUI
-          players={players}
           playerId={(currentPlayerIndex - 1) % players.length}
           startGame={startGame}
           theme={theme}
@@ -219,8 +217,7 @@ const styles = {
   },
   sidePlayersContainer: {
     position: "absolute" as const,
-    top: "50%",
-    transform: "translateY(-50%)",
+    top: "35%",
     display: "flex",
     flexDirection: "column" as const,
     gap: "10px",

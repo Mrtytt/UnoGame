@@ -1,24 +1,29 @@
 import React from "react";
 import { Player } from "../components/players"; // Oyuncu türünü kullanıyorsanız türü içe aktarın.
 import { calculateRemainingPoints } from "./calculateRemainingPoints";
+import { useGameContext } from "../context/GameContext";
 
 interface GameOverUIProps {
-  players: Player[];
   playerId: number;
   startGame: () => void;
   theme: string;
-  themeStyles: { [key: string]: { textColor: string; drawButtonColor: string } };
+  themeStyles: {
+    [key: string]: { textColor: string; drawButtonColor: string };
+  };
 }
 
 export const GameOverUI: React.FC<GameOverUIProps> = ({
-  players,
   playerId,
   startGame,
   theme,
   themeStyles,
 }) => {
-  // Kazanan oyuncuyu bul ve kalan puanları hesapla
-  const winner = players.find((player) => player.id === playerId);
+  const { isClockwise, players} = useGameContext();
+  const adjustedIndex = isClockwise
+    ? (playerId + 1 ) % players.length // Saat yönündeyse sıradaki oyuncu
+    : (playerId + 1 + players.length) % players.length;
+
+  const winner = players.find((player) => player.id === adjustedIndex + 1);
   const remainingPoints = calculateRemainingPoints(players, playerId);
 
   return (

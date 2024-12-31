@@ -213,13 +213,23 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     const player = players.find((p) => p.id === playerId);
     if (!player) return;
 
+    // UNO çağrısı kontrolü
     if (player.hand.length === 2 && !player.calledUno) {
       alert(`${player.name} did not call UNO and is penalized.`);
-      drawCardsForNextPlayer(playerId - 1, 2); // Ceza olarak 2 kart çek
-    }
+    
+      // Oyunun yönüne göre sıradaki oyuncuyu belirle
+      const penaltyPlayerIndex = isClockwise
+        ? (currentPlayerIndex) % players.length // Saat yönündeyse sıradaki oyuncu
+        : (currentPlayerIndex - 1 + players.length) % players.length; // Ters yöndeyse önceki oyuncu
+    
+      // Cezayı uygulayın
+      drawCardsForNextPlayer(penaltyPlayerIndex, 2);
+    }    
+
+    // Oynanan kartı güncelle
     playedCards.push(card);
 
-    // 2. Özel kartlar için işlem yap
+    // Özel kart işlemleri
     if (card.value === "+4") {
       drawCardsForNextPlayer(playerId, 4);
       setShowColorPopup(true);
@@ -240,32 +250,38 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
         return newIndex;
       });
     }
+
+    // Oynanan kartı oyuncunun elinden çıkar
     const updatedHand = player.hand.filter((c) => c.id !== card.id);
 
+    // Oyuncular listesini güncelle
     const updatedPlayers = players.map((p) =>
       p.id === playerId ? { ...p, hand: updatedHand } : p
     );
 
     setPlayers(updatedPlayers);
-    // 3. UNO kontrolü
-    // 4. Oyunu kazananı kontrol et
+
+    // Kazanan kontrolü
     if (updatedHand.length === 0) {
       setGameOver(true);
       return;
     }
 
-    // 5. Güncel kartı ayarla ve sonraki oyuncuya geç
-    setPlayedCards((prev) => [...prev, currentCard]);
+    // Kart sayısı 2 olan oyuncuya UNO kontrolü
+    if (updatedHand.length === 2) {
+      resetCallUno(playerId);
+    }
+
+    // Güncel kartı ayarla ve sıradaki oyuncuya geç
+    setPlayedCards((prev) => [...prev, card]);
     setCurrentCard(card);
     setCurrentPlayerIndex((prevIndex) =>
       isClockwise
         ? (prevIndex + 1) % players.length
         : (prevIndex - 1 + players.length) % players.length
     );
-    if (updatedHand.length === 2) {
-      resetCallUno(playerId); // Kart sayısı 2 olan oyuncuya UNO kontrolü yapılacak
-    }
   };
+
   const playerIndexWithClockwise = (isClockwise: boolean) => {
     if (isClockwise) {
       setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
@@ -285,11 +301,13 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
   const resetCallUno = (playerId: number) => {
-    const updatedPlayers = players.map((player) =>
-      player.id === playerId ? { ...player, calledUno: false } : player
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((player) =>
+        player.id === playerId ? { ...player, calledUno: false } : player
+      )
     );
-    setPlayers(updatedPlayers);
   };
+
   // Oyuncu sırasını yönetmek
   const playTurn = () => {
     const currentPlayer = players[currentPlayerIndex];

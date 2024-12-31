@@ -10,6 +10,7 @@ import {
 import { useTheme } from "../context/ThemeContext";
 import BackButton from "../utils/BackButton";
 import supportTexts from "../data/supportTexts.json"; // JSON dosyasını içe aktar
+import AppDrawer from "../utils/AppDrawer";
 
 const SupportScreen: React.FC = () => {
   const { theme, themeStyles } = useTheme(); // Tema bilgilerini alın
@@ -23,7 +24,11 @@ const SupportScreen: React.FC = () => {
       }}
     >
       <BackButton />
-      <Typography variant="h4" sx={{...styles.header,color: themeStyles[theme].textColor}}>
+      <AppDrawer />
+      <Typography
+        variant="h4"
+        sx={{ ...styles.header, color: themeStyles[theme].textColor }}
+      >
         {supportTexts.header}
       </Typography>
       <Box sx={styles.section}>
@@ -53,7 +58,11 @@ const SupportScreen: React.FC = () => {
         </Typography>
       </Box>
       <Button
-        sx={styles.reportButton}
+        sx={{
+          ...styles.reportButton,
+          backgroundColor: themeStyles[theme].handContainer.currentPlayer,
+          color: themeStyles[theme].nameTextColor.currentPlayer,
+        }}
         variant="contained"
         onClick={() => alert(supportTexts.buttonAlert)}
       >
@@ -109,13 +118,13 @@ const styles = {
   reportButton: {
     marginTop: "20px",
     backgroundColor: "#e74c3c",
-    color: "#fff",
     padding: "12px 24px",
     fontSize: "16px",
     fontWeight: "bold",
     borderRadius: "5px",
     "&:hover": {
       backgroundColor: "#c0392b",
+      color:"#fff"
     },
   },
 };

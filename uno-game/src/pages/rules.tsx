@@ -1,6 +1,7 @@
 import { useTheme } from "../context/ThemeContext";
 import BackButton from "../utils/BackButton";
 import rulesData from "../data/rules.json"; // JSON dosyasını içeri aktarıyoruz
+import AppDrawer from "../utils/AppDrawer";
 
 const RulesPage = () => {
   const { theme, themeStyles } = useTheme(); // Get theme and themeStyles
@@ -14,6 +15,7 @@ const RulesPage = () => {
       }}
     >
       <BackButton />
+      <AppDrawer />
       <h1 style={{ ...styles.title, color: themeStyles[theme].textColor }}>
         UNO Game Rules
       </h1>

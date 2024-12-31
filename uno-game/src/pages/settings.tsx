@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { useMusic } from "../context/MusicContext";
 import { useTheme } from "../context/ThemeContext";
 import BackButton from "../utils/BackButton";
+import AppDrawer from "../utils/AppDrawer";
 
 const Settings: React.FC = () => {
   const { isPlaying, toggleMusic, volume, setVolume } = useMusic();
@@ -23,7 +24,7 @@ const Settings: React.FC = () => {
     music: false,
     volume: false,
   });
-  
+
   const toggleSection = (section: keyof typeof openSections) => {
     setOpenSections((prevState) => ({
       ...prevState,
@@ -39,16 +40,39 @@ const Settings: React.FC = () => {
         color: themeStyles[theme].textColor,
       }}
     >
-      <BackButton></BackButton>
-      <div style={{...styles.settings,backgroundColor:themeStyles[theme].handContainer.currentPlayer}}>
-        <h2 style={{...styles.title,color:themeStyles[theme].nameTextColor.currentPlayer}}>Settings</h2>
+      <BackButton/>
+      <AppDrawer/>
+      <div
+        style={{
+          ...styles.settings,
+          backgroundColor: themeStyles[theme].handContainer.currentPlayer,
+        }}
+      >
+        <h2
+          style={{
+            ...styles.title,
+            color: themeStyles[theme].nameTextColor.currentPlayer,
+          }}
+        >
+          Settings
+        </h2>
 
         {/* Theme Settings Section */}
         <div style={styles.section}>
           <div style={styles.sectionHeader}>
-            <h3 style={{...styles.sectionTitle,color:themeStyles[theme].nameTextColor.currentPlayer}}>Theme Settings</h3>
+            <h3
+              style={{
+                ...styles.sectionTitle,
+                color: themeStyles[theme].nameTextColor.currentPlayer,
+              }}
+            >
+              Theme Settings
+            </h3>
             <button
-              style={styles.toggleButton}
+              style={{
+                ...styles.toggleButton,
+                color: themeStyles[theme].nameTextColor.currentPlayer,
+              }}
               onClick={() => toggleSection("theme")}
             >
               {openSections.theme ? "▲" : "▼"}
@@ -125,9 +149,19 @@ const Settings: React.FC = () => {
         {/* Music Settings Section */}
         <div style={styles.section}>
           <div style={styles.sectionHeader}>
-            <h3 style={{...styles.sectionTitle,color:themeStyles[theme].nameTextColor.currentPlayer}}>Music Settings</h3>
+            <h3
+              style={{
+                ...styles.sectionTitle,
+                color: themeStyles[theme].nameTextColor.currentPlayer,
+              }}
+            >
+              Music Settings
+            </h3>
             <button
-              style={styles.toggleButton}
+              style={{
+                ...styles.toggleButton,
+                color: themeStyles[theme].nameTextColor.currentPlayer,
+              }}
               onClick={() => toggleSection("music")}
             >
               {openSections.music ? "▲" : "▼"}
@@ -146,9 +180,19 @@ const Settings: React.FC = () => {
         {/* Volume Settings Section */}
         <div style={styles.section}>
           <div style={styles.sectionHeader}>
-            <h3 style={{...styles.sectionTitle,color:themeStyles[theme].nameTextColor.currentPlayer}}>Volume Settings</h3>
+            <h3
+              style={{
+                ...styles.sectionTitle,
+                color: themeStyles[theme].nameTextColor.currentPlayer,
+              }}
+            >
+              Volume Settings
+            </h3>
             <button
-              style={styles.toggleButton}
+              style={{
+                ...styles.toggleButton,
+                color: themeStyles[theme].nameTextColor.currentPlayer,
+              }}
               onClick={() => toggleSection("volume")}
             >
               {openSections.volume ? "▲" : "▼"}
@@ -221,7 +265,6 @@ const styles = {
   toggleButton: {
     fontSize: "1rem",
     backgroundColor: "transparent",
-    color: "white",
     border: "none",
     cursor: "pointer",
     transition: "background-color 0.3s ease",
