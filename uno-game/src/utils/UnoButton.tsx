@@ -50,7 +50,7 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     display: "flex",
-    top: "60%",
+    top: "63%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     textAlign: "center" as const,

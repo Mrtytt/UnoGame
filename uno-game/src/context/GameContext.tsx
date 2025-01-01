@@ -173,7 +173,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     const animationElement = createAnimationElement();
 
     // Animasyonun başlangıç ve hedef pozisyonlarını ayarla
-    const startPosition = "translate(1050%, -450%)";
+    const startPosition = "translate(1450%, -475%)";
     const targetTransform = getCardTransform(player.playerPosition);
 
     // Animasyonu başlat

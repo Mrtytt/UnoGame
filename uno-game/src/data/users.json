@@ -1,0 +1,30 @@
+[
+    {
+      "username": "user1",
+      "password": "password1",
+      "settings": {
+        "theme": "black",
+        "language": "tr",
+        "notifications": true
+      }
+    },
+    {
+      "username": "user2",
+      "password": "password2",
+      "settings": {
+        "theme": "sunset",
+        "language": "en",
+        "notifications": false
+      }
+    },
+    {
+      "username": "admin",
+      "password": "admin123",
+      "settings": {
+        "theme": "forest",
+        "language": "tr",
+        "notifications": true
+      }
+    }
+  ]
+  

@@ -40,11 +40,11 @@ export const PlayerHand = ({
       case "top":
         return "translate(-50%, 250%)";
       case "right":
-        return "translate(-650%, -50%)";
+        return "translate(-950%, -50%)";
       case "bottom":
-        return "translate(-50%, -250%)";
+        return "translate(-50%, -350%)";
       case "left":
-        return "translate(650%, -50%)";
+        return "translate(850%, -50%)";
       default:
         return "translate(-50%, -50%)";
     }
@@ -128,19 +128,18 @@ const styles = {
   playerContainer: {
     padding: "10px",
     borderRadius: "8px",
-    marginBottom: "10px",
   },
   handContainer: {
     display: "flex",
     gap: "5px",
     padding: "10px 0",
-    maxWidth: "475px", // Sabit genişlik
-    height: "100px",
+    maxWidth: "350px", // Sabit genişlik
+    height: "75px",
     overflowX: "hidden", // Fazla kartlar gizlenir, kaydırma kullanıcı sırasına göre kontrol edilir
   },
   cardBack: {
-    width: "75px",
-    height: "100px",
+    width: "50px",
+    height: "75px",
     backgroundImage: `url('/cardback.png')`,
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",

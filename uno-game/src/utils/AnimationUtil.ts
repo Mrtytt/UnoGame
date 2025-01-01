@@ -3,8 +3,8 @@ export const addCSS = () => {
   style.innerHTML = `
       .card-animation {
         position: absolute;
-        width: 75px;
-        height: 100px;
+        width: 50px;
+        height: 75px;
         background-image: url('/cardback.png');
         background-size: 100% 100%;
         background-repeat: no-repeat;
@@ -25,7 +25,7 @@ export const animateCardToPlayer = (
   animationElement.className = "card-animation";
   addCSS();
 
-  const startPosition = "translate(1050%, -450%)";
+  const startPosition = "translate(1350%, -550%)";
   animationElement.style.transform = startPosition;
   animationElement.style.transition = `transform 1.0s ease ${delay}ms`;
 
@@ -47,13 +47,13 @@ export const getCardTransform = (
 ) => {
   switch (position) {
     case "top":
-      return "translate(1050%, -675%)";
+      return "translate(1250%, -975%)";
     case "right":
-      return "translate(1950%, -450%)";
+      return "translate(2450%, -550%)";
     case "bottom":
-      return "translate(1050%, -100%)";
+      return "translate(1250%, -100%)";
     case "left":
-      return "translate(150%, -450%)";
+      return "translate(150%, -550%)";
     default:
       return "translate(-50%, -50%)";
   }

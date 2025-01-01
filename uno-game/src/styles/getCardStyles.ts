@@ -25,14 +25,14 @@ export const getCardStyles = (color: string, value: string | number) => {
   }
 
   // Value'nin türüne göre font size belirleniyor
-  const fontSize = typeof value === "number" ? "50px" : "20px";
+  const fontSize = typeof value === "number" ? "46px" : "16px";
 
   return {
     backgroundColor,
     color: textColor,
     cursor: "pointer",
-    width: "75px", // Fixed card width
-    height: "100px", // Fixed card height
+    width: "50px", // Fixed card width
+    height: "75px", // Fixed card height
     textAlign: "center" as const,
     fontSize,
     borderRadius: "10px",

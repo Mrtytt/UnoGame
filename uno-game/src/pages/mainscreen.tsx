@@ -3,12 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import AppDrawer from "../utils/AppDrawer";
 import BackButton from "../utils/BackButton";
+import { useAuth } from "../context/AuthContext";
 
 const MainScreen: React.FC = () => {
   const navigate = useNavigate();
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  const { theme, themeStyles } = useTheme(); // theme ve themeStyles'ı alıyoruz
+  const { theme, themeStyles } = useTheme();
+  const { isAuthenticated, setIsAuthenticated } = useAuth(); // theme ve themeStyles'ı alıyoruz
+
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    setIsAuthenticated(false); // Set isAuthenticated to false
+    navigate("/login"); // Redirect to login screen
+  };
 
   return (
     <div
@@ -26,7 +34,6 @@ const MainScreen: React.FC = () => {
 
       <h1 style={{ ...styles.welcomeText }}>Welcome to UNO!</h1>
 
-      {/* Buttons */}
       <div style={styles.buttonsContainer}>
         <button
           style={{
@@ -44,6 +51,7 @@ const MainScreen: React.FC = () => {
             color: themeStyles[theme].nameTextColor.currentPlayer, // Temadan gelen buton yazı rengi
             backgroundColor: themeStyles[theme].handContainer.currentPlayer, // Temadan gelen buton yazı rengi
           }}
+          onClick={handleLogout} // Butona tıklandığında çıkış yap
         >
           Exit
         </button>
