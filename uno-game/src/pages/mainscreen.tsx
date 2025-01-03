@@ -53,7 +53,7 @@ const MainScreen: React.FC = () => {
           }}
           onClick={handleLogout} // Butona tıklandığında çıkış yap
         >
-          Exit
+          Logout
         </button>
       </div>
     </div>

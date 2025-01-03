@@ -23,8 +23,8 @@ const UnoButton: React.FC<UnoButtonProps> = ({gameOver}) => {
       <button
         style={{
           ...styles.callUnoButton,
-          background: themeStyles[theme]?.drawButtonColor || "gray",
-          color: themeStyles[theme]?.textColor || "white",
+          background: themeStyles[theme]?.handContainer.currentPlayer || "gray",
+          color: themeStyles[theme]?.nameTextColor.currentPlayer || "white",
         }}
         onClick={handleCallUno}
         disabled={gameOver || !currentPlayer || currentPlayer.hand.length > 2}

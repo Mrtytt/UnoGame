@@ -25,7 +25,7 @@ export const animateCardToPlayer = (
   animationElement.className = "card-animation";
   addCSS();
 
-  const startPosition = "translate(1350%, -550%)";
+  const startPosition = "translate(1450%, -475%)";
   animationElement.style.transform = startPosition;
   animationElement.style.transition = `transform 1.0s ease ${delay}ms`;
 
@@ -47,13 +47,13 @@ export const getCardTransform = (
 ) => {
   switch (position) {
     case "top":
-      return "translate(1250%, -975%)";
+      return "translate(1450%, -875%)";
     case "right":
-      return "translate(2450%, -550%)";
+      return "translate(2450%, -475%)";
     case "bottom":
-      return "translate(1250%, -100%)";
+      return "translate(1450%, -100%)";
     case "left":
-      return "translate(150%, -550%)";
+      return "translate(150%, -475%)";
     default:
       return "translate(-50%, -50%)";
   }

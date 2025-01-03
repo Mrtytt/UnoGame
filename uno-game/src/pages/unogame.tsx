@@ -180,8 +180,6 @@ const UNOGame: React.FC = () => {
         gameOver={gameOver}
         drawCard={drawCard}
         currentPlayerIndex={currentPlayerIndex}
-        themeStyles={themeStyles}
-        theme={theme}
       />
       <UnoButton
         gameOver={gameOver}

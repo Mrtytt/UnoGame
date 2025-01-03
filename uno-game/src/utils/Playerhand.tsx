@@ -91,8 +91,8 @@ export const PlayerHand = ({
                     position: "absolute",
                     left: "50%",
                     top: "50%",
-                    transform: getCardTransform(player.playerPosition), // Oyuncuya göre hareket
                     transition: "all 1s ease-out",
+                    transform: getCardTransform(player.playerPosition), // Oyuncuya göre hareket
                     zIndex: 10, // Kartın üstte olması için
                   }
                 : {}),
@@ -135,7 +135,7 @@ const styles = {
     padding: "10px 0",
     maxWidth: "350px", // Sabit genişlik
     height: "75px",
-    overflowX: "hidden", // Fazla kartlar gizlenir, kaydırma kullanıcı sırasına göre kontrol edilir
+    overflowX: "hidden",
   },
   cardBack: {
     width: "50px",

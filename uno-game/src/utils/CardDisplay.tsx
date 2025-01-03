@@ -1,5 +1,6 @@
 import React from "react";
 import { Card } from "../components/cards";
+import { useTheme } from "../context/ThemeContext";
 
 interface CardDisplayProps {
   gameStarted: boolean;
@@ -9,8 +10,6 @@ interface CardDisplayProps {
   gameOver: boolean;
   drawCard: (playerId: number) => void;
   currentPlayerIndex: number;
-  themeStyles: Record<string, { drawButtonColor: string; textColor: string }>;
-  theme: string;
 }
 
 const CardDisplay: React.FC<CardDisplayProps> = ({
@@ -20,10 +19,10 @@ const CardDisplay: React.FC<CardDisplayProps> = ({
   isAnimating,
   gameOver,
   drawCard,
-  currentPlayerIndex,
-  themeStyles,
-  theme,
+  currentPlayerIndex
 }) => {
+    const { theme, themeStyles } = useTheme();
+  
   const styles = {
     cardContainer: {
       position: "absolute" as const,
@@ -100,8 +99,8 @@ const CardDisplay: React.FC<CardDisplayProps> = ({
       <button
         style={{
           ...styles.drawCardButton,
-          background: themeStyles[theme].drawButtonColor,
-          color: themeStyles[theme].textColor,
+          background: themeStyles[theme].handContainer.currentPlayer,
+          color: themeStyles[theme].nameTextColor.currentPlayer,
         }}
         onClick={() => drawCard(currentPlayerIndex)}
         disabled={gameOver}

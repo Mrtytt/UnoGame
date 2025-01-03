@@ -1,33 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const { setIsAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  const [inputFocus, setInputFocus] = useState(false);
-  const [buttonHover, setButtonHover] = useState(false);
-
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5000/login', {
+      const response = await axios.post('http://localhost:5000/register', {
         username,
+        email,
         password,
       });
-      setMessage('Giriş başarılı!');
-      navigate('/');
-      setIsAuthenticated(true);
+      setMessage('Kayıt başarılı! Giriş yapabilirsiniz.');
     } catch (error: any) {
-      setMessage(error.response?.data || 'Giriş sırasında bir hata oluştu.');
+      setMessage(error.response?.data || 'Kayıt sırasında bir hata oluştu.');
     }
   };
+
+  const [inputFocus, setInputFocus] = useState(false);
+  const [buttonHover, setButtonHover] = useState(false);
 
   const styles = {
     body: {
@@ -97,13 +95,23 @@ const Login: React.FC = () => {
   return (
     <div style={styles.body}>
       <div style={styles.container}>
-        <h1>Giriş Yap</h1>
-        <form onSubmit={handleLogin}>
+        <h1>Kayıt Ol</h1>
+        <form onSubmit={handleRegister}>
           <input
             type="text"
             placeholder="Kullanıcı Adı"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
+            style={styles.input}
+            onFocus={() => setInputFocus(true)}
+            onBlur={() => setInputFocus(false)}
+          />
+          <input
+            type="email"
+            placeholder="E-posta"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
             style={styles.input}
             onFocus={() => setInputFocus(true)}
@@ -125,16 +133,16 @@ const Login: React.FC = () => {
             onMouseOver={() => setButtonHover(true)}
             onMouseOut={() => setButtonHover(false)}
           >
-            Giriş Yap
+            Kayıt Ol
           </button>
         </form>
         {message && <p style={styles.message}>{message}</p>}
-        <a style={styles.link} onClick={() => navigate('/register')}>
-          Hesabınız yok mu? Kayıt Ol
+        <a style={styles.link} onClick={() => navigate('/login')}>
+          Zaten hesabınız var mı? Giriş Yap
         </a>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;

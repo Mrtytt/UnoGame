@@ -17,18 +17,17 @@ import { ThemeProvider } from "./context/ThemeContext";
 import UNOGame from "./pages/unogame";
 import { GameProvider } from "./context/GameContext";
 import LoginScreen from "./pages/login"; // Login ekranını ekliyoruz
-import isAuthenticated from "./pages/login"; // Login ekranını ekliyoruz
-import { AuthProvider } from "./context/AuthContext";
+import RegisterScreen from "./pages/register"; // Register ekranını ekliyoruz
+import { AuthProvider, useAuth } from "./context/AuthContext";
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);
-
-    const user = localStorage.getItem("currentUser");
 
     return () => clearTimeout(timer);
   }, []);
@@ -37,43 +36,48 @@ const App: React.FC = () => {
     <Router>
       <MusicProvider>
         <ThemeProvider>
-          <AuthProvider>
-            <GameProvider>
-              <div>
-                {isLoading ? (
-                  <Loading />
-                ) : (
-                  <Routes>
-                    {!isAuthenticated ? (
+          <GameProvider>
+            <div>
+              {isLoading ? (
+                <Loading />
+              ) : (
+                <Routes>
+                  {!isAuthenticated ? (
+                    <>
+                      <Route path="/login" element={<LoginScreen />} />
+                      <Route path="/register" element={<RegisterScreen />} />
                       <Route
                         path="*"
                         element={<Navigate to="/login" replace />}
                       />
-                    ) : (
-                      <>
-                        <Route path="/" element={<MainScreen />} />
-                        <Route path="/rules" element={<RulesPage />} />
-                        <Route path="/updates" element={<UpdatesScreen />} />
-                        <Route path="/support" element={<SupportScreen />} />
-                        <Route path="/settings" element={<Settings />} />
-                        <Route path="/unogame" element={<UNOGame />} />
-                        <Route
-                          path="/logout"
-                          element={<Navigate to="/login" replace />}
-                        />
-                        <Route path="*" element={<NotFound />} />
-                      </>
-                    )}
-                    <Route path="/login" element={<LoginScreen />} />
-                  </Routes>
-                )}
-              </div>
-            </GameProvider>
-          </AuthProvider>
+                    </>
+                  ) : (
+                    <>
+                      <Route path="/" element={<MainScreen />} />
+                      <Route path="/rules" element={<RulesPage />} />
+                      <Route path="/updates" element={<UpdatesScreen />} />
+                      <Route path="/support" element={<SupportScreen />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/unogame" element={<UNOGame />} />
+                      <Route path="*" element={<NotFound />} />
+                    </>
+                  )}
+                </Routes>
+              )}
+            </div>
+          </GameProvider>
         </ThemeProvider>
       </MusicProvider>
     </Router>
   );
 };
 
-export default App;
+const AppWrapper: React.FC = () => {
+  return (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  );
+};
+
+export default AppWrapper;

@@ -223,7 +223,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
         : (currentPlayerIndex - 1 + players.length) % players.length; // Ters yöndeyse önceki oyuncu
     
       // Cezayı uygulayın
-      drawCardsForNextPlayer(penaltyPlayerIndex, 2);
+      drawCardsForNextPlayer(penaltyPlayerIndex - 1, 2);
     }    
 
     // Oynanan kartı güncelle
